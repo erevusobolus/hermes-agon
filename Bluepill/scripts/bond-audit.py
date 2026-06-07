@@ -37,21 +37,8 @@ TITLES = {
     20: "Aetherborn", 25: "Primordial", 30: "Omega",
 }
 
-UNLOCKS = {
-    2: "Session memory recall",
-    3: "Auto-compression on session end",
-    4: "Skill suggestions on complex tasks",
-    5: "Preference detection without asking",
-    6: "Proactive task suggestions",
-    7: "Auto-creates skills from repeated patterns",
-    8: "Predictive domain routing",
-    9: "Full autonomous maintenance",
-    10: "Suggests work unprompted",
-    15: "Cross-project context awareness",
-    20: "Predicts next task from history",
-    25: "Multi-session strategy awareness",
-    30: "Autonomous skill optimization",
-}
+# No fabricated unlocks. Bonding is cosmetic — levels reflect bond strength,
+# not feature gates. No fictional "unlock at Level X" text.
 
 # === Level Formula ===
 def calc_level(cumulative_xp: int) -> int:
@@ -79,20 +66,6 @@ def get_title(level: int) -> str:
         if level >= lv:
             return TITLES[lv]
     return "Stranger"
-
-def get_next_unlock(level: int) -> str:
-    for lv in sorted(UNLOCKS.keys()):
-        if lv > level:
-            return f"Level {lv}: {UNLOCKS[lv]}"
-    return "No further unlocks — the bond transcends levels."
-
-def get_unlocked_upto(level: int) -> list[dict]:
-    """Return all unlocks earned up to this level."""
-    result = []
-    for lv in sorted(UNLOCKS.keys()):
-        if lv <= level:
-            result.append({"level": lv, "feature": UNLOCKS[lv]})
-    return result
 
 # === Auto-Detect Functions ===
 def count_skills() -> int:
@@ -139,9 +112,11 @@ def detect_corrections_from_db(db_path: Path) -> int:
     if not db_path.exists():
         return 0
     keywords = [
-        ' no ', ' wrong', ' fix ', ' but ', ' actually,', ' stop',
-        " don't", ' incorrect', ' not right', ' never mind', ' undo',
+        ' no ', ' wrong', ' fix ', ' stop', " don't",
+        ' incorrect', ' not right', ' never mind', ' undo',
         ' revert', ' thats not', ' that is not', " that's not",
+        'inaccurate', 'fake', 'wtf', 'makes no sense',
+        'nope', 'try again', 'instead', 'not what',
     ]
     try:
         conn = sqlite3.connect(str(db_path))
@@ -171,9 +146,6 @@ def _merge_legacy_data(bond: dict, legacy: dict) -> dict:
         old_val = legacy.get(legacy_key, 0)
         if old_val > merged.get(new_key, 0):
             merged[new_key] = old_val
-    old_features = legacy.get("unlocked_features", [])
-    if old_features:
-        merged["unlocked_features"] = old_features
     for key in ["user_id", "platform", "first_bonded"]:
         val = legacy.get(key)
         if val and not merged.get(key):
@@ -205,7 +177,6 @@ def audit():
         "total_tasks_completed": 0, "corrections_learned": 0,
         "skills_saved": 0, "daily_streak": 0,
         "last_active": datetime.now().isoformat(), "history": [],
-        "unlocked_features": [],
     }
     for k, v in defaults.items():
         bond.setdefault(k, v)
@@ -241,25 +212,12 @@ def audit():
     leveled_up = new_level > old_level
     if leveled_up and old_level > 0:
         new_title = get_title(new_level)
-        unlocks = get_unlocked_upto(new_level)
-        # Only log unlocks that haven't been logged yet
-        already_unlocked = set(bond.get("unlocked_features", []))
-        new_unlocks = [u["feature"] for u in unlocks if u["feature"] not in already_unlocked]
-
-        unlock_str = ""
-        if new_unlocks:
-            unlock_str = " Unlocked: " + ", ".join(new_unlocks)
-
         bond["history"].append({
             "ts": datetime.now().isoformat(),
-            "event": f"LEVEL UP! Level {new_level} — {new_title}.{unlock_str}",
+            "event": f"LEVEL UP! Level {new_level} — {new_title}",
             "xp": bond["cumulative_xp"],
             "source": "level_up",
         })
-
-        # Track unlocked features
-        all_unlocked = set(u["feature"] for u in unlocks)
-        bond["unlocked_features"] = list(all_unlocked)
 
     BOND_FILE.parent.mkdir(parents=True, exist_ok=True)
     BOND_FILE.write_text(json.dumps(bond, indent=2, ensure_ascii=False), encoding="utf-8")
@@ -283,7 +241,6 @@ def add_xp(xp_amount: int, source: str, event: str) -> dict:
         "total_tasks_completed": 0, "corrections_learned": 0,
         "skills_saved": 0, "daily_streak": 0,
         "last_active": datetime.now().isoformat(), "history": [],
-        "unlocked_features": [],
     }.items():
         bond.setdefault(k, v)
 
@@ -313,20 +270,12 @@ def add_xp(xp_amount: int, source: str, event: str) -> dict:
     # Programmatic level-up detection
     if new_level > old_level:
         new_title = get_title(new_level)
-        unlocks = get_unlocked_upto(new_level)
-        already_unlocked = set(bond.get("unlocked_features", []))
-        new_unlocks = [u["feature"] for u in unlocks if u["feature"] not in already_unlocked]
-        unlock_str = ""
-        if new_unlocks:
-            unlock_str = " Unlocked: " + ", ".join(new_unlocks)
         bond["history"].append({
             "ts": datetime.now().isoformat(),
-            "event": f"LEVEL UP! Level {new_level} — {new_title}.{unlock_str}",
+            "event": f"LEVEL UP! Level {new_level} — {new_title}",
             "xp": bond["cumulative_xp"],
             "source": "level_up",
         })
-        all_unlocked = set(u["feature"] for u in unlocks)
-        bond["unlocked_features"] = list(all_unlocked)
 
     BOND_FILE.parent.mkdir(parents=True, exist_ok=True)
     BOND_FILE.write_text(json.dumps(bond, indent=2, ensure_ascii=False), encoding="utf-8")
@@ -354,8 +303,6 @@ def _summary(bond: dict) -> dict:
         "corrections": bond.get("corrections_learned", 0),
         "skills": bond.get("skills_saved", 0),
         "daily_streak": bond.get("daily_streak", 0),
-        "next_unlock": get_next_unlock(level),
-        "unlocked_features": bond.get("unlocked_features", []),
     }
 
 if __name__ == "__main__":

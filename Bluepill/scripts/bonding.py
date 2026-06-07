@@ -31,21 +31,7 @@ TITLES = {
     20: "Aetherborn", 25: "Primordial", 30: "Omega",
 }
 
-UNLOCKS = {
-    2: "Session memory recall",
-    3: "Auto-compression on session end",
-    4: "Skill suggestions on complex tasks",
-    5: "Preference detection without asking",
-    6: "Proactive task suggestions",
-    7: "Auto-creates skills from repeated patterns",
-    8: "Predictive domain routing",
-    9: "Full autonomous maintenance",
-    10: "Suggests work unprompted",
-    15: "Cross-project context awareness",
-    20: "Predicts next task from history",
-    25: "Multi-session strategy awareness",
-    30: "Autonomous skill optimization",
-}
+# No fabricated unlocks. Bonding is cosmetic only — real stats, no fiction.
 
 # ── Data ──────────────────────────────────────────────────────────────
 def load_bonding():
@@ -67,7 +53,6 @@ def _normalize(raw):
         "corrections": raw.get("corrections_learned") or raw.get("total_corrections", 0),
         "first_bonded": raw.get("first_bonded", ""),
         "last_active": raw.get("last_active", ""),
-        "unlocked_features": raw.get("unlocked_features", []),
         "user_id": raw.get("user_id", "user"),
         "platform": raw.get("platform", ""),
     }
@@ -78,14 +63,7 @@ def _get_title(level):
             return TITLES[lv]
     return "Stranger"
 
-def _get_unlocked_list(level):
-    return [UNLOCKS[lv] for lv in sorted(UNLOCKS.keys()) if lv <= level]
 
-def _get_next_unlock(level):
-    for lv in sorted(UNLOCKS.keys()):
-        if lv > level:
-            return "Level {}: {}".format(lv, UNLOCKS[lv])
-    return "No further unlocks -- the bond transcends levels."
 
 def _comma(n):
     return "{:,}".format(n)
@@ -147,8 +125,6 @@ def format_level(data):
     pct = min(100, max(0, int(xp_this / xp_next * 100)))
     remaining = xp_next - xp_this
 
-    next_u = _get_next_unlock(level)
-    unlocked = _get_unlocked_list(level)
     bar_str = _bar(pct)
 
     lines = []
@@ -183,24 +159,7 @@ def format_level(data):
     for label, val in stat_rows:
         lines.append(_ll(label, val))
 
-    lines.append(_rule())
-
-    # Next unlock
-    lines.append(_l("N E X T   U N L O C K"))
-    lines.append(_rule())
-    lines.append(_l(next_u))
-    lines.append(_rule())
-
-    # Unlocked features
-    if unlocked:
-        lines.append(_l("U N L O C K E D"))
-        lines.append(_rule())
-        for feat in unlocked:
-            lines.append(_l("o " + feat))
-
     lines.append(_rule_end())
-    lines.append("")
-    lines.append("  The contest never ends.")
     lines.append("```")
 
     return "\n".join(lines)
@@ -218,8 +177,6 @@ def format_bond(data):
     pct = min(100, max(0, int(xp_this / xp_next * 100)))
     remaining = xp_next - xp_this
 
-    next_u = _get_next_unlock(level)
-    unlocked = _get_unlocked_list(level)
     bar_str = _bar(pct)
 
     first_bonded = (data.get("first_bonded") or "today")[:10]
@@ -264,25 +221,7 @@ def format_bond(data):
     for label, val in all_stats:
         lines.append(_ll(label, val))
 
-    lines.append(_rule())
-
-    # Unlocked
-    lines.append(_l("U N L O C K E D   F E A T U R E S"))
-    lines.append(_rule())
-    if unlocked:
-        for feat in unlocked:
-            lines.append(_l("o " + feat))
-    else:
-        lines.append(_l("(none yet -- keep interacting)"))
-
-    lines.append(_rule())
-    lines.append(_l("N E X T   M I L E S T O N E"))
-    lines.append(_rule())
-    lines.append(_l(next_u))
-
     lines.append(_rule_end())
-    lines.append("")
-    lines.append("  The contest never ends.")
     lines.append("```")
 
     return "\n".join(lines)
