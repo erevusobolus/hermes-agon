@@ -1,7 +1,6 @@
 """
-AGON Bonding Utility — reads bonding.json and renders /level and /bond output.
-Auto-render: level-ups detected programmatically by bond-audit.py.
-Dashboard uses box-drawing characters — renders in any monospace terminal.
+AGON Bonding Utility — Telegram-native ASCII dashboard.
+Pure ASCII only (no Unicode, no emoji). Renders inside ```code blocks```.
 """
 
 import json, os
@@ -19,29 +18,7 @@ else:
 
 BONDING_FILE = HERMES_HOME / "agon" / "bonding.json"
 
-# Constants for box-drawing (avoids backslash in f-strings)
-R1 = chr(0x2554)  # ╔
-R2 = chr(0x2557)  # ╗
-R3 = chr(0x255a)  # ╚
-R4 = chr(0x255d)  # ╝
-H  = chr(0x2550)  # ═
-V  = chr(0x2551)  # ║
-T  = chr(0x2560)  # ╠
-B  = chr(0x2563)  # ╣
-S1 = chr(0x2501)  # ━
-S2 = chr(0x2503)  # ┃
-BAR_F = chr(0x2588)  # █
-BAR_E = chr(0x2591)  # ░
-CHK  = chr(0x2713)  # ✓
-STAR = chr(0x2605)  # ★
-SWORD = chr(0x2694)  # ⚔
-AGON = chr(0x0391) + chr(0x0393) + chr(0x03a9) + chr(0x039d)  # ΑΓΩΝ
-DASH = chr(0x2014)  # —
-
-# ── Level & Title tables ─────────────────────────────────────────────
 def _level_formula(level):
-    """Total cumulative XP needed to reach *level*.
-       Level 1 base: 0. Level N (N>=2): 10*N^2+5."""
     if level <= 1:
         return 0
     return int(10 * level ** 2 + 5)
@@ -70,7 +47,7 @@ UNLOCKS = {
     30: "Autonomous skill optimization",
 }
 
-# ── Data loading ────────────────────────────────────────────────────
+# ── Data ──────────────────────────────────────────────────────────────
 def load_bonding():
     try:
         with open(BONDING_FILE) as f:
@@ -108,24 +85,56 @@ def _get_next_unlock(level):
     for lv in sorted(UNLOCKS.keys()):
         if lv > level:
             return "Level {}: {}".format(lv, UNLOCKS[lv])
-    return "No further unlocks" + DASH + "the bond transcends levels."
-
-# ── Bar render (20 segments) ────────────────────────────────────────
-BAR_SEGMENTS = 20
-
-def _bar(pct):
-    filled = min(BAR_SEGMENTS, max(0, pct * BAR_SEGMENTS // 100))
-    empty = BAR_SEGMENTS - filled
-    return BAR_F * filled + BAR_E * empty
-
-# ── Helpers ─────────────────────────────────────────────────────────
-def _pad(text, width):
-    return str(text).ljust(width)[:width]
+    return "No further unlocks -- the bond transcends levels."
 
 def _comma(n):
     return "{:,}".format(n)
 
-# ── format_level: compact dashboard ─────────────────────────────────
+# ── ASCII bar (20 segments) ──────────────────────────────────────────
+BAR_W = 20
+
+def _bar(pct):
+    """20-segment bar: # = filled, . = empty. At least 1 if pct>0."""
+    filled = 0
+    if pct > 0:
+        filled = max(1, int(pct * BAR_W / 100))
+        if filled > BAR_W:
+            filled = BAR_W
+    return "[" + "#" * filled + "." * (BAR_W - filled) + "]"
+
+# ── ASCII frame helpers ──────────────────────────────────────────────
+W = 60  # interior width
+
+def _rule():
+    return "+" + "-" * W + "+"
+
+def _rule_end():
+    return "+" + "-" * W + "+"
+
+def _line(text):
+    """Center text."""
+    t = str(text)[:W]
+    left = (W - len(t)) // 2
+    right = W - len(t) - left
+    return "|" + " " * left + t + " " * right + "|"
+
+def _l(text):
+    """Left-aligned text."""
+    t = str(text)
+    if len(t) > W:
+        t = t[:W]
+    return "| " + t + " " * (W - 1 - len(t)) + "|"
+
+def _ll(label, value):
+    """Two-column label:value."""
+    l = str(label)
+    v = str(value)
+    line = " " + l + " " * (14 - len(l)) + v
+    if len(line) > W:
+        line = line[:W]
+    return "|" + line + " " * (W - len(line)) + "|"
+
+# ── format_level ──────────────────────────────────────────────────────
 def format_level(data):
     level = data["level"]
     xp = data["total_xp"]
@@ -139,73 +148,64 @@ def format_level(data):
     remaining = xp_next - xp_this
 
     next_u = _get_next_unlock(level)
-
-    stats = [
-        ("Sessions", data["sessions"]),
-        ("Tool Calls", data["tool_calls"]),
-        ("Skills Saved", data["skills_saved"]),
-        ("Tasks Done", data["tasks_done"]),
-        ("Corrections", data["corrections"]),
-    ]
-
     unlocked = _get_unlocked_list(level)
     bar_str = _bar(pct)
-    W = 46  # interior width
 
     lines = []
-    # Header
-    lines.append(R1 + H * W + R2)
-    lines.append(V + "      " + SWORD + "  " + AGON + "  BONDING  REPORT  " + SWORD + "      " + V)
-    lines.append(T + H * W + B)
-    lines.append(V + "  " + " " * W + "  " + V)
+    lines.append("```")
+    lines.append(_rule())
+    lines.append(_line("A G O N   B O N D I N G   R E P O R T"))
+    lines.append(_rule())
 
-    # Level line
-    ll = "LEVEL {:>3} {}".format(level, bar_str) + "  {}%".format(pct)
-    lines.append(V + "  " + _pad(ll, W) + "  " + V)
+    # Level + bar
+    lvl_str = "Level " + str(level)
+    pct_str = str(pct) + "%"
+    bar_line = " " + lvl_str + " " * (7 - len(lvl_str)) + bar_str + "  " + pct_str
+    lines.append(_l(bar_line))
 
-    # Title line
-    tl = "  TITLE  {}".format(title.upper())
-    lines.append(V + "  " + _pad(tl, W) + "  " + V)
-
-    # XP + Next
-    xl = "  XP    {}".format(_comma(xp))
-    nl = "  NEXT  {} XP to level {}".format(_comma(remaining), level + 1)
-    lines.append(V + "  " + _pad(xl, W) + "  " + V)
-    lines.append(V + "  " + _pad(nl, W) + "  " + V)
-
-    lines.append(V + "  " + " " * W + "  " + V)
+    # Title
+    lines.append(_l("Title  " + title.upper()))
+    lines.append(_rule())
 
     # Stats
-    lines.append(V + "  " + _pad("  " + S1 * 3 + " BATTLE STATS " + S1 * 3, W) + "  " + V)
-    for label, val in stats:
-        sl = "  {} {}".format(_pad(label, 14), _comma(val).rjust(8))
-        lines.append(V + "  " + _pad(sl, W) + "  " + V)
+    lines.append(_l("B A T T L E   S T A T S"))
+    lines.append(_rule())
 
-    lines.append(V + "  " + " " * W + "  " + V)
+    stat_rows = [
+        ("XP",         _comma(xp)),
+        ("Next",       _comma(remaining) + " XP to L" + str(level + 1)),
+        ("Sessions",   _comma(data["sessions"])),
+        ("Tool Calls", _comma(data["tool_calls"])),
+        ("Skills",     _comma(data["skills_saved"])),
+        ("Tasks",      _comma(data["tasks_done"])),
+        ("Corrections",_comma(data["corrections"])),
+    ]
+    for label, val in stat_rows:
+        lines.append(_ll(label, val))
+
+    lines.append(_rule())
 
     # Next unlock
-    lines.append(V + "  " + _pad("  " + S1 * 3 + " NEXT UNLOCK " + S1 * 3, W) + "  " + V)
-    lines.append(V + "  " + _pad("  {}".format(next_u), W) + "  " + V)
+    lines.append(_l("N E X T   U N L O C K"))
+    lines.append(_rule())
+    lines.append(_l(next_u))
+    lines.append(_rule())
 
-    lines.append(V + "  " + " " * W + "  " + V)
-
-    # Unlocked
+    # Unlocked features
     if unlocked:
-        lines.append(V + "  " + _pad("  " + S1 * 3 + " UNLOCKED " + S1 * 3, W) + "  " + V)
+        lines.append(_l("U N L O C K E D"))
+        lines.append(_rule())
         for feat in unlocked:
-            lines.append(V + "  " + _pad("  " + CHK + "  {}".format(feat), W) + "  " + V)
+            lines.append(_l("o " + feat))
 
-    lines.append(V + "  " + " " * W + "  " + V)
-
-    # Footer
-    lines.append(T + H * W + B)
-    footer_text = "     " + STAR + "  THE CONTEST NEVER ENDS  " + STAR + "     "
-    lines.append(V + footer_text + V)
-    lines.append(R3 + H * W + R4)
+    lines.append(_rule_end())
+    lines.append("")
+    lines.append("  The contest never ends.")
+    lines.append("```")
 
     return "\n".join(lines)
 
-# ── format_bond: full detailed report ───────────────────────────────
+# ── format_bond ───────────────────────────────────────────────────────
 def format_bond(data):
     level = data["level"]
     xp = data["total_xp"]
@@ -221,80 +221,72 @@ def format_bond(data):
     next_u = _get_next_unlock(level)
     unlocked = _get_unlocked_list(level)
     bar_str = _bar(pct)
-    W = 46
 
-    user_val = data.get("user_id", "unknown")
-    platform_val = data.get("platform", "unknown") or "all"
     first_bonded = (data.get("first_bonded") or "today")[:10]
     last_active = (data.get("last_active") or "now")[:10]
-
-    all_stats = [
-        ("Sessions", data["sessions"]),
-        ("Tool Calls", data["tool_calls"]),
-        ("Skills Authored", data["skills_saved"]),
-        ("Tasks Completed", data["tasks_done"]),
-        ("Corrections Learned", data["corrections"]),
-        ("First Bonded", first_bonded),
-        ("Last Active", last_active),
-    ]
+    user_val = data.get("user_id", "unknown")
+    platform_val = data.get("platform", "unknown") or "all"
 
     lines = []
-    # Header
-    lines.append(R1 + H * W + R2)
-    lines.append(V + "    " + SWORD + "  " + AGON + "  FULL  BOND  " + SWORD + "    " + V)
-    lines.append(T + H * W + B)
-    lines.append(V + "  " + " " * W + "  " + V)
-    lines.append(V + "  " + _pad("User: {}".format(user_val), W) + "  " + V)
-    lines.append(V + "  " + _pad("Platform: {}".format(platform_val), W) + "  " + V)
-    lines.append(V + "  " + " " * W + "  " + V)
+    lines.append("```")
+    lines.append(_rule())
+    lines.append(_line("A G O N   F U L L   B O N D"))
+    lines.append(_rule())
 
-    # Level line
-    ll = "LEVEL {:>3} {}".format(level, bar_str) + "  {}%".format(pct)
-    lines.append(V + "  " + _pad(ll, W) + "  " + V)
+    # User info
+    lines.append(_l("User: " + user_val))
+    lines.append(_l("Platform: " + platform_val))
+    lines.append(_rule())
 
-    tl = "  TITLE  {}".format(title.upper())
-    lines.append(V + "  " + _pad(tl, W) + "  " + V)
-
-    xl = "  XP  {}  total  |  {}% to next".format(_comma(xp), pct)
-    lines.append(V + "  " + _pad(xl, W) + "  " + V)
-
-    nl = "  NEXT  {} XP remaining".format(_comma(remaining))
-    lines.append(V + "  " + _pad(nl, W) + "  " + V)
-    lines.append(V + "  " + " " * W + "  " + V)
+    # Level bar
+    lvl_str = "Level " + str(level)
+    pct_str = str(pct) + "%"
+    bar_line = " " + lvl_str + " " * (7 - len(lvl_str)) + bar_str + "  " + pct_str
+    lines.append(_l(bar_line))
+    lines.append(_l("Title  " + title.upper()))
+    lines.append(_rule())
 
     # Stats
-    lines.append(V + "  " + _pad("  " + S1 * 3 + " STATISTICS " + S1 * 3, W) + "  " + V)
+    lines.append(_l("S T A T I S T I C S"))
+    lines.append(_rule())
+
+    all_stats = [
+        ("XP",             _comma(xp)),
+        ("Next",           _comma(remaining) + " XP to L" + str(level + 1)),
+        ("Sessions",       _comma(data["sessions"])),
+        ("Tool Calls",     _comma(data["tool_calls"])),
+        ("Skills",         _comma(data["skills_saved"])),
+        ("Tasks Done",     _comma(data["tasks_done"])),
+        ("Corrections",    _comma(data["corrections"])),
+        ("First Bonded",   first_bonded),
+        ("Last Active",    last_active),
+    ]
     for label, val in all_stats:
-        sl = "  {} {}".format(_pad(label, 18), str(val).rjust(12))
-        lines.append(V + "  " + _pad(sl, W) + "  " + V)
+        lines.append(_ll(label, val))
 
-    lines.append(V + "  " + " " * W + "  " + V)
+    lines.append(_rule())
 
-    # Unlocked features
+    # Unlocked
+    lines.append(_l("U N L O C K E D   F E A T U R E S"))
+    lines.append(_rule())
     if unlocked:
-        lines.append(V + "  " + _pad("  " + S1 * 3 + " UNLOCKED FEATURES " + S1 * 3, W) + "  " + V)
         for feat in unlocked:
-            lines.append(V + "  " + _pad("  " + CHK + "  {}".format(feat), W) + "  " + V)
+            lines.append(_l("o " + feat))
     else:
-        lines.append(V + "  " + _pad("  " + S1 * 3 + " UNLOCKED FEATURES " + S1 * 3, W) + "  " + V)
-        lines.append(V + "  " + _pad("  (none yet" + DASH + "keep interacting)", W) + "  " + V)
+        lines.append(_l("(none yet -- keep interacting)"))
 
-    lines.append(V + "  " + " " * W + "  " + V)
+    lines.append(_rule())
+    lines.append(_l("N E X T   M I L E S T O N E"))
+    lines.append(_rule())
+    lines.append(_l(next_u))
 
-    # Next milestone
-    lines.append(V + "  " + _pad("  " + S1 * 3 + " NEXT MILESTONE " + S1 * 3, W) + "  " + V)
-    lines.append(V + "  " + _pad("  {}".format(next_u), W) + "  " + V)
-    lines.append(V + "  " + " " * W + "  " + V)
-
-    # Footer
-    lines.append(T + H * W + B)
-    footer_text = "     " + STAR + "  THE CONTEST NEVER ENDS  " + STAR + "     "
-    lines.append(V + footer_text + V)
-    lines.append(R3 + H * W + R4)
+    lines.append(_rule_end())
+    lines.append("")
+    lines.append("  The contest never ends.")
+    lines.append("```")
 
     return "\n".join(lines)
 
-# ── CLI entry point ─────────────────────────────────────────────────
 if __name__ == "__main__":
     import sys
     data = load_bonding()
