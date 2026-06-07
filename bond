@@ -1,16 +1,16 @@
 #!/usr/bin/env bash
-# bond — Check your AGON bonding level, XP, and stats (via programmable audit)
+# bond — Check AGON bonding level (runs auto-audit, shows dashboard)
 set -euo pipefail
 
 AUDIT_SCRIPT="${HOME}/.hermes/agon/bond-audit.py"
 BONDING_PY="${HOME}/.hermes/agon/bonding.py"
 
 if [ ! -f "$AUDIT_SCRIPT" ]; then
-    echo "  AGON audit script not found. Run 'install.sh' first."
+    echo "  AGON audit script not found. Run install.sh first."
     exit 1
 fi
 
-# Run audit to ensure stats are current, then display
+# Run audit to ensure stats are current
 python3 "$AUDIT_SCRIPT" > /dev/null 2>&1 || true
 
 if [ -f "$BONDING_PY" ]; then
@@ -19,18 +19,15 @@ from bonding import format_level, load_bonding
 print(format_level(load_bonding()))
 "
 else
-    # Fallback: raw JSON display
+    # Fallback: raw display from JSON
     python3 -c "
 import json
 with open('${HOME}/.hermes/agon/bonding.json') as f:
     b = json.load(f)
-print('')
-print('  AGON — BOND STATUS')
-print(f'  Level:  {b[\"level\"]}')
-print(f'  XP:     {b[\"cumulative_xp\"]}')
-next_xp = 10 * (b['level'] + 1) ** 2 + 5
-print(f'  Next:   {next_xp - b[\"cumulative_xp\"]} XP')
-print('')
-print('  DEUS VULT.')
+level = b.get('level', 1)
+xp = b.get('cumulative_xp', 0)
+next_needed = 10 * (level + 1) ** 2 + 5
+progress = int((xp / next_needed) * 100) if next_needed > 0 else 0
+print(f'Level: {level}  |  XP: {xp} / {next_needed}  |  {progress}% to next')
 "
 fi

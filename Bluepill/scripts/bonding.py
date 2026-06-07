@@ -1,9 +1,9 @@
 """
 AGON Bonding Utility — reads bonding.json and renders /level and /bond output.
-
-Used by gateway/run.py handlers for the /level and /bond slash commands.
-Supports the AGON bonding schema (version, level, cumulative_xp, ...).
+Auto-render: level-ups detected programmatically by bond-audit.py.
+Dashboard uses box-drawing characters — renders in any monospace terminal.
 """
+
 import json, os
 from pathlib import Path
 
@@ -19,11 +19,39 @@ else:
 
 BONDING_FILE = HERMES_HOME / "agon" / "bonding.json"
 
+# Constants for box-drawing (avoids backslash in f-strings)
+R1 = chr(0x2554)  # ╔
+R2 = chr(0x2557)  # ╗
+R3 = chr(0x255a)  # ╚
+R4 = chr(0x255d)  # ╝
+H  = chr(0x2550)  # ═
+V  = chr(0x2551)  # ║
+T  = chr(0x2560)  # ╠
+B  = chr(0x2563)  # ╣
+S1 = chr(0x2501)  # ━
+S2 = chr(0x2503)  # ┃
+BAR_F = chr(0x2588)  # █
+BAR_E = chr(0x2591)  # ░
+CHK  = chr(0x2713)  # ✓
+STAR = chr(0x2605)  # ★
+SWORD = chr(0x2694)  # ⚔
+AGON = chr(0x0391) + chr(0x0393) + chr(0x03a9) + chr(0x039d)  # ΑΓΩΝ
+DASH = chr(0x2014)  # —
+
+# ── Level & Title tables ─────────────────────────────────────────────
+def _level_formula(level):
+    """Total cumulative XP needed to reach *level*.
+       Level 1 base: 0. Level N (N>=2): 10*N^2+5."""
+    if level <= 1:
+        return 0
+    return int(10 * level ** 2 + 5)
+
 TITLES = {
     1: "Stranger", 2: "Acquaintance", 3: "Friend", 4: "Companion",
     5: "Partner", 6: "Champion", 7: "Legend", 8: "Myth",
     9: "Apex", 10: "Ascendant", 11: "Transcendent", 12: "Eternal",
     13: "Daimon", 14: "Olympian", 15: "Titan",
+    20: "Aetherborn", 25: "Primordial", 30: "Omega",
 }
 
 UNLOCKS = {
@@ -42,17 +70,8 @@ UNLOCKS = {
     30: "Autonomous skill optimization",
 }
 
-
-def _level_formula(level: int) -> int:
-    """Total cumulative XP needed to reach *level*.
-       Level 1 base: 0. Level N (N>=2): 10*N^2+5."""
-    if level <= 1:
-        return 0
-    return int(10 * level ** 2 + 5)
-
-
-def load_bonding() -> dict:
-    """Load bonding.json and return normalized data."""
+# ── Data loading ────────────────────────────────────────────────────
+def load_bonding():
     try:
         with open(BONDING_FILE) as f:
             raw = json.load(f)
@@ -60,9 +79,7 @@ def load_bonding() -> dict:
         raw = {}
     return _normalize(raw)
 
-
-def _normalize(raw: dict) -> dict:
-    """Normalize AGON bonding JSON to internal schema."""
+def _normalize(raw):
     return {
         "level": raw.get("level") or raw.get("bonding_level", 1),
         "total_xp": raw.get("cumulative_xp") or raw.get("total_xp", 0),
@@ -78,108 +95,210 @@ def _normalize(raw: dict) -> dict:
         "platform": raw.get("platform", ""),
     }
 
-
-def _get_title(level: int) -> str:
+def _get_title(level):
     for lv in sorted(TITLES.keys(), reverse=True):
         if level >= lv:
             return TITLES[lv]
     return "Stranger"
 
+def _get_unlocked_list(level):
+    return [UNLOCKS[lv] for lv in sorted(UNLOCKS.keys()) if lv <= level]
 
-def _get_next_unlock(level: int) -> str:
+def _get_next_unlock(level):
     for lv in sorted(UNLOCKS.keys()):
         if lv > level:
-            return f"Level {lv}: {UNLOCKS[lv]}"
-    return "No further unlocks \u2014 the bond transcends levels."
+            return "Level {}: {}".format(lv, UNLOCKS[lv])
+    return "No further unlocks" + DASH + "the bond transcends levels."
 
+# ── Bar render (20 segments) ────────────────────────────────────────
+BAR_SEGMENTS = 20
 
-def _bar(pct: int) -> str:
-    filled = min(10, max(0, pct // 10))
-    empty = 10 - filled
-    return chr(0x2588) * filled + chr(0x2592) * empty
+def _bar(pct):
+    filled = min(BAR_SEGMENTS, max(0, pct * BAR_SEGMENTS // 100))
+    empty = BAR_SEGMENTS - filled
+    return BAR_F * filled + BAR_E * empty
 
+# ── Helpers ─────────────────────────────────────────────────────────
+def _pad(text, width):
+    return str(text).ljust(width)[:width]
 
-def format_level(data: dict) -> str:
-    """Compact /level response."""
+def _comma(n):
+    return "{:,}".format(n)
+
+# ── format_level: compact dashboard ─────────────────────────────────
+def format_level(data):
     level = data["level"]
     xp = data["total_xp"]
-    xp_this = xp - _level_formula(level)
-    xp_next = _level_formula(level + 1) - _level_formula(level)
-    if xp_next <= 0:
-        xp_next = 1
-    pct = min(100, max(0, int(xp_this / xp_next * 100)))
-    lines = [
-        "\u2550" * 40,
-        "         AGON BONDING REPORT",
-        "\u2550" * 40,
-        "",
-        f"  Level:    {level}  {_bar(pct)}  {pct}%",
-        f"  Title:    {_get_title(level)}",
-        f"  XP:       {xp} total",
-        f"  To Next:  {xp_next - xp_this} XP",
-        "",
-        "  Stats:",
-        f"    Sessions:       {data['sessions']}",
-        f"    Tool Calls:     {data['tool_calls']}",
-        f"    Skills Saved:   {data['skills_saved']}",
-        f"    Tasks Done:     {data['tasks_done']}",
-        f"    Corrections:    {data['corrections']}",
-        f"    Bonded Since:   {(data['first_bonded'] or 'today')[:10]}",
-        "",
-        f"  Next:   {_get_next_unlock(level)}",
-        "",
-        "  DEUS VULT.",
-        "",
-    ]
-    return "\n".join(lines)
-
-
-def format_bond(data: dict) -> str:
-    """Full /bond report."""
-    level = data["level"]
-    xp = data["total_xp"]
-    xp_this = xp - _level_formula(level)
-    xp_next = _level_formula(level + 1) - _level_formula(level)
-    if xp_next <= 0:
-        xp_next = 1
-    pct = min(100, max(0, int(xp_this / xp_next * 100)))
     title = _get_title(level)
-    next_unlock = _get_next_unlock(level)
-    features = data.get("unlocked_features", []) or []
 
-    lines = [
-        "\u2550" * 40,
-        "       AGON \u2014 FULL BOND REPORT",
-        "\u2550" * 40,
-        "",
-        f"  User:     {data.get('user_id', 'unknown')}",
-        f"  Platform: {data.get('platform', 'unknown') or 'all'}",
-        f"  Level:    {level} ({title})",
-        f"  XP:       {xp} total  |  {pct}% to next level",
-        f"  Next Lv:  {xp_next - xp_this} XP remaining",
-        "",
-        "  \u2500\u2500 Statistics \u2500\u2500",
-        f"    Sessions Used:        {data['sessions']}",
-        f"    Tool Calls Executed:  {data['tool_calls']}",
-        f"    Skills Authored:      {data['skills_saved']}",
-        f"    Tasks Completed:      {data['tasks_done']}",
-        f"    Corrections Learned:  {data['corrections']}",
-        f"    First Bonded:         {(data['first_bonded'] or 'today')[:10]}",
-        f"    Last Active:          {(data['last_active'] or 'now')[:10]}",
-        "",
-        "  \u2500\u2500 Unlocked Features \u2500\u2500",
+    xp_this = xp - _level_formula(level)
+    xp_next = _level_formula(level + 1) - _level_formula(level)
+    if xp_next <= 0:
+        xp_next = 1
+    pct = min(100, max(0, int(xp_this / xp_next * 100)))
+    remaining = xp_next - xp_this
+
+    next_u = _get_next_unlock(level)
+
+    stats = [
+        ("Sessions", data["sessions"]),
+        ("Tool Calls", data["tool_calls"]),
+        ("Skills Saved", data["skills_saved"]),
+        ("Tasks Done", data["tasks_done"]),
+        ("Corrections", data["corrections"]),
     ]
-    if features:
-        for feat in features:
-            lines.append(f"    \u2713 {feat}")
-    else:
-        lines.append("    (none yet \u2014 keep interacting)")
-    lines += [
-        "",
-        "  \u2500\u2500 Next Milestone \u2500\u2500",
-        f"    {next_unlock}",
-        "",
-        "  DEUS VULT.",
-        "",
-    ]
+
+    unlocked = _get_unlocked_list(level)
+    bar_str = _bar(pct)
+    W = 46  # interior width
+
+    lines = []
+    # Header
+    lines.append(R1 + H * W + R2)
+    lines.append(V + "      " + SWORD + "  " + AGON + "  BONDING  REPORT  " + SWORD + "      " + V)
+    lines.append(T + H * W + B)
+    lines.append(V + "  " + " " * W + "  " + V)
+
+    # Level line
+    ll = "LEVEL {:>3} {}".format(level, bar_str) + "  {}%".format(pct)
+    lines.append(V + "  " + _pad(ll, W) + "  " + V)
+
+    # Title line
+    tl = "  TITLE  {}".format(title.upper())
+    lines.append(V + "  " + _pad(tl, W) + "  " + V)
+
+    # XP + Next
+    xl = "  XP    {}".format(_comma(xp))
+    nl = "  NEXT  {} XP to level {}".format(_comma(remaining), level + 1)
+    lines.append(V + "  " + _pad(xl, W) + "  " + V)
+    lines.append(V + "  " + _pad(nl, W) + "  " + V)
+
+    lines.append(V + "  " + " " * W + "  " + V)
+
+    # Stats
+    lines.append(V + "  " + _pad("  " + S1 * 3 + " BATTLE STATS " + S1 * 3, W) + "  " + V)
+    for label, val in stats:
+        sl = "  {} {}".format(_pad(label, 14), _comma(val).rjust(8))
+        lines.append(V + "  " + _pad(sl, W) + "  " + V)
+
+    lines.append(V + "  " + " " * W + "  " + V)
+
+    # Next unlock
+    lines.append(V + "  " + _pad("  " + S1 * 3 + " NEXT UNLOCK " + S1 * 3, W) + "  " + V)
+    lines.append(V + "  " + _pad("  {}".format(next_u), W) + "  " + V)
+
+    lines.append(V + "  " + " " * W + "  " + V)
+
+    # Unlocked
+    if unlocked:
+        lines.append(V + "  " + _pad("  " + S1 * 3 + " UNLOCKED " + S1 * 3, W) + "  " + V)
+        for feat in unlocked:
+            lines.append(V + "  " + _pad("  " + CHK + "  {}".format(feat), W) + "  " + V)
+
+    lines.append(V + "  " + " " * W + "  " + V)
+
+    # Footer
+    lines.append(T + H * W + B)
+    footer_text = "     " + STAR + "  THE CONTEST NEVER ENDS  " + STAR + "     "
+    lines.append(V + footer_text + V)
+    lines.append(R3 + H * W + R4)
+
     return "\n".join(lines)
+
+# ── format_bond: full detailed report ───────────────────────────────
+def format_bond(data):
+    level = data["level"]
+    xp = data["total_xp"]
+    title = _get_title(level)
+
+    xp_this = xp - _level_formula(level)
+    xp_next = _level_formula(level + 1) - _level_formula(level)
+    if xp_next <= 0:
+        xp_next = 1
+    pct = min(100, max(0, int(xp_this / xp_next * 100)))
+    remaining = xp_next - xp_this
+
+    next_u = _get_next_unlock(level)
+    unlocked = _get_unlocked_list(level)
+    bar_str = _bar(pct)
+    W = 46
+
+    user_val = data.get("user_id", "unknown")
+    platform_val = data.get("platform", "unknown") or "all"
+    first_bonded = (data.get("first_bonded") or "today")[:10]
+    last_active = (data.get("last_active") or "now")[:10]
+
+    all_stats = [
+        ("Sessions", data["sessions"]),
+        ("Tool Calls", data["tool_calls"]),
+        ("Skills Authored", data["skills_saved"]),
+        ("Tasks Completed", data["tasks_done"]),
+        ("Corrections Learned", data["corrections"]),
+        ("First Bonded", first_bonded),
+        ("Last Active", last_active),
+    ]
+
+    lines = []
+    # Header
+    lines.append(R1 + H * W + R2)
+    lines.append(V + "    " + SWORD + "  " + AGON + "  FULL  BOND  " + SWORD + "    " + V)
+    lines.append(T + H * W + B)
+    lines.append(V + "  " + " " * W + "  " + V)
+    lines.append(V + "  " + _pad("User: {}".format(user_val), W) + "  " + V)
+    lines.append(V + "  " + _pad("Platform: {}".format(platform_val), W) + "  " + V)
+    lines.append(V + "  " + " " * W + "  " + V)
+
+    # Level line
+    ll = "LEVEL {:>3} {}".format(level, bar_str) + "  {}%".format(pct)
+    lines.append(V + "  " + _pad(ll, W) + "  " + V)
+
+    tl = "  TITLE  {}".format(title.upper())
+    lines.append(V + "  " + _pad(tl, W) + "  " + V)
+
+    xl = "  XP  {}  total  |  {}% to next".format(_comma(xp), pct)
+    lines.append(V + "  " + _pad(xl, W) + "  " + V)
+
+    nl = "  NEXT  {} XP remaining".format(_comma(remaining))
+    lines.append(V + "  " + _pad(nl, W) + "  " + V)
+    lines.append(V + "  " + " " * W + "  " + V)
+
+    # Stats
+    lines.append(V + "  " + _pad("  " + S1 * 3 + " STATISTICS " + S1 * 3, W) + "  " + V)
+    for label, val in all_stats:
+        sl = "  {} {}".format(_pad(label, 18), str(val).rjust(12))
+        lines.append(V + "  " + _pad(sl, W) + "  " + V)
+
+    lines.append(V + "  " + " " * W + "  " + V)
+
+    # Unlocked features
+    if unlocked:
+        lines.append(V + "  " + _pad("  " + S1 * 3 + " UNLOCKED FEATURES " + S1 * 3, W) + "  " + V)
+        for feat in unlocked:
+            lines.append(V + "  " + _pad("  " + CHK + "  {}".format(feat), W) + "  " + V)
+    else:
+        lines.append(V + "  " + _pad("  " + S1 * 3 + " UNLOCKED FEATURES " + S1 * 3, W) + "  " + V)
+        lines.append(V + "  " + _pad("  (none yet" + DASH + "keep interacting)", W) + "  " + V)
+
+    lines.append(V + "  " + " " * W + "  " + V)
+
+    # Next milestone
+    lines.append(V + "  " + _pad("  " + S1 * 3 + " NEXT MILESTONE " + S1 * 3, W) + "  " + V)
+    lines.append(V + "  " + _pad("  {}".format(next_u), W) + "  " + V)
+    lines.append(V + "  " + " " * W + "  " + V)
+
+    # Footer
+    lines.append(T + H * W + B)
+    footer_text = "     " + STAR + "  THE CONTEST NEVER ENDS  " + STAR + "     "
+    lines.append(V + footer_text + V)
+    lines.append(R3 + H * W + R4)
+
+    return "\n".join(lines)
+
+# ── CLI entry point ─────────────────────────────────────────────────
+if __name__ == "__main__":
+    import sys
+    data = load_bonding()
+    if len(sys.argv) > 1 and sys.argv[1] == "bond":
+        print(format_bond(data))
+    else:
+        print(format_level(data))
