@@ -99,12 +99,20 @@ if (-not $hermesCmd) {
     Write-Host "  [ok] Hermes $hVer" -ForegroundColor Green; $ok++
 }
 
-# --- 4. AGON Config ------------------------------------------------------
+# --- 4. AGON Profile ------------------------------------------------------
 Write-Host ""
-Write-Host "  -- AGON Configuration ---------------------" -ForegroundColor DarkCyan
-& hermes config set model.default "deepseek/deepseek-v4-flash" 2>$null
-& hermes config set model.provider "nous" 2>$null
-Write-Host "     Model: deepseek/deepseek-v4-flash (Nous Portal)" -ForegroundColor White
+Write-Host "  -- AGON Profile ---------------------------" -ForegroundColor DarkCyan
+$agonProfile = $HERMES_HOME + "\profiles\agon"
+if (Test-Path $agonProfile) {
+    $env:HERMES_HOME = $agonProfile
+    Write-Host "     Profile: AGON ($agonProfile)" -ForegroundColor White
+    Write-Host "     Model:   deepseek/deepseek-v4-flash (Nous Portal)" -ForegroundColor White
+} else {
+    Write-Host "     AGON profile not found -- using defaults" -ForegroundColor DarkYellow
+    & hermes config set model.default "deepseek/deepseek-v4-flash" 2>$null
+    & hermes config set model.provider "nous" 2>$null
+    Write-Host "     Model: deepseek/deepseek-v4-flash (Nous Portal)" -ForegroundColor White
+}
 
 $skinDir = $HERMES_HOME + "\skins"
 $skinDst = $skinDir + "\agon.yaml"

@@ -90,12 +90,20 @@ else
     ok "Hermes $hver"; ((ok_count++))
 fi
 
-# ─── 4. AGON Config ─────────────────────────────────────────────────────
+# ─── 4. AGON Profile ────────────────────────────────────────────────────
 echo ""
-echo -e "${cyan}  ── AGON Configuration ───────────────────────${reset}"
-hermes config set model.default "deepseek/deepseek-v4-flash" 2>/dev/null || true
-hermes config set model.provider "nous" 2>/dev/null || true
-echo "     Model: deepseek/deepseek-v4-flash (Nous Portal)"
+echo -e "${cyan}  ── AGON Profile ───────────────────────────${reset}"
+AGON_PROFILE="${HERMES_HOME}/profiles/agon"
+if [ -d "$AGON_PROFILE" ]; then
+    export HERMES_HOME="$AGON_PROFILE"
+    echo "     Profile: AGON (${AGON_PROFILE})"
+    echo "     Model:   deepseek/deepseek-v4-flash (Nous Portal)"
+else
+    echo -e "${yellow}     AGON profile not found — using defaults${reset}"
+    hermes config set model.default "deepseek/deepseek-v4-flash" 2>/dev/null || true
+    hermes config set model.provider "nous" 2>/dev/null || true
+    echo "     Model: deepseek/deepseek-v4-flash (Nous Portal)"
+fi
 
 SKIN_DIR="$HERMES_HOME/skins"
 SKIN_DST="$SKIN_DIR/agon.yaml"

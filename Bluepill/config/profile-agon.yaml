@@ -1,0 +1,10 @@
+# AGON Profile — Hermes Agent configuration
+# This file only contains overrides from the default profile.
+model:
+  default: deepseek/deepseek-v4-flash
+  provider: nous
+agent:
+  default_personality: agon
+display:
+  skin: agon
+  personality: AGON

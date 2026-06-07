@@ -62,6 +62,8 @@ That's it. Your browser opens to a dark, three-panel chat UI where you can:
 
 **Zero setup. Zero config. Just click and talk.**
 
+> **Behind the scenes:** The launcher auto-selects the **AGON** Hermes profile — dedicated config, model, skin, personality, and isolated state at `~/.hermes/profiles/agon/`.
+
 ![Hermes Web UI — three-panel layout](WebUI/docs/images/ui-workspace.png)
 
 ---
@@ -115,18 +117,22 @@ curl -fsSL https://raw.githubusercontent.com/erevussystems/hermes-agon/main/inst
 
 Every interaction earns experience points (XP):
 
-| What You Do                     | XP  |
-| ------------------------------- | --- |
-| Send a message                  | +1  |
-| Tool call (terminal, web, file) | +2  |
-| Complete a complex task         | +10 |
-| AGON learns from a correction   | +8  |
-| Save a workflow as a skill      | +25 |
-| Daily first interaction         | +5  |
+| What You Do                     | XP  | How Detected                  |
+| ------------------------------- | --- | ----------------------------- |
+| Send a message                  | +1  | Auto-detected from session DB |
+| Tool call (terminal, web, file) | +2  | Auto-detected from session DB |
+| Complete a complex task         | +10 | Agent tracks via bond-audit.py |
+| AGON learns from a correction   | +8  | Agent tracks via bond-audit.py |
+| Save a workflow as a skill      | +25 | Auto-detected from filesystem |
+| Daily first interaction         | +5  | Cron job (6am) |
 
-### 📈 Infinite Leveling
+### 📈 Infinite Leveling (v2 — Programmatic Audit)
 
-Level **N** requires **floor(10 × N²) + 5 total XP**. No cap. There is always a next level.
+**Stats are auto-detected.** An audit script (`~/.hermes/agon/bond-audit.py`) reads the session DB and filesystem to compute real counts — no manual tracking, no hardcoded numbers.
+
+Level **N** (N≥2) requires **10 × N² + 5 total XP**. Level 1 starts at 0 XP. No cap. There is always a next level.
+
+To check stats: `./bond` or `.\\bond.cmd`
 
 | Level | Total XP    | What Unlocks                                        |
 | ----- | ----------- | --------------------------------------------------- |
@@ -173,8 +179,9 @@ No match? AGON **synthesizes** a hybrid agent from the closest domains. Always. 
 | `./chat.sh` | Linux/Mac | Open WebUI in browser |
 | `.\chat.bat` | Windows | Open WebUI in browser (double-click) |
 | `hermes chat` | Both | Chat with AGON (default personality) |
-| `bond` / `.\bond.cmd` | Both | Check your level, XP, stats |
+| `bond` / `.\\bond.cmd` | Both | Check level, XP, stats (runs auto-audit) |
 | `WAKE UP AGON` | Both | AGON trigger phrase |
+| `hermes -p AGON chat` | Both | Terminal chat with AGON profile |
 
 ---
 
@@ -236,9 +243,28 @@ AGON/
 ├── BOOTSTRAP.md         # Detailed setup guide
 ├── PROMPT-GUIDE.md      # How to talk to AGON
 ├── .github/agents/      # 12 legacy domain files (preserved)
-├── BONDING.md           # Leveling system specification
+├── BONDING.md           # Leveling system specification (v2 programmable)
 ├── bond                 # Check level, XP, stats (Linux/Mac)
 ├── bond.cmd             # Check level, XP, stats (Windows)
+├── Bluepill/
+│   ├── skills/          # AGON skills for install
+│   │   ├── agon-bonding/
+│   │   ├── agon-gateway-bonding/
+│   │   ├── therion-core/
+│   │   ├── therion-delegator/
+│   │   ├── therion-assistant/
+│   │   ├── therion-prompting/
+│   │   ├── therion-promptcraft/
+│   │   ├── therion-strategic/
+│   │   ├── therion-hermes/
+│   │   └── therion-to-hermes-skills/
+│   ├── domain-skills/   # Duplicate skills for domain isolation (same contents)
+│   ├── scripts/         # Install-time scripts
+│   │   ├── bond-audit.py  # Auto-detects bonding stats from filesystem + session DB
+│   │   └── bonding.py     # Bond display formatter (/level, /bond)
+│   └── config/
+│       ├── bonding.json.default  # Default starting bond data
+│       └── profile-agon.yaml     # Reference AGON profile config
 └── WebUI/               # Git submodule → nesquena/hermes-webui
     ├── start.sh         # Official Hermes WebUI launcher
     ├── start.ps1        # Official Hermes WebUI launcher (Windows)
