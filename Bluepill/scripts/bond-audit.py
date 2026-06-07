@@ -120,6 +120,43 @@ def count_interactions_and_tool_calls(db_path: Path) -> dict:
         pass
     return result
 
+def detect_tasks_from_db(db_path: Path) -> int:
+    """Count sessions with 3+ tool calls = completed tasks."""
+    if not db_path.exists():
+        return 0
+    try:
+        conn = sqlite3.connect(str(db_path))
+        c = conn.cursor()
+        c.execute("SELECT COUNT(*) FROM (SELECT session_id, COUNT(*) as cnt FROM messages WHERE role='tool' GROUP BY session_id HAVING cnt >= 3)")
+        result = c.fetchone()[0]
+        conn.close()
+        return result
+    except Exception:
+        return 0
+
+def detect_corrections_from_db(db_path: Path) -> int:
+    """Count user messages containing correction patterns."""
+    if not db_path.exists():
+        return 0
+    keywords = [
+        ' no ', ' wrong', ' fix ', ' but ', ' actually,', ' stop',
+        " don't", ' incorrect', ' not right', ' never mind', ' undo',
+        ' revert', ' thats not', ' that is not', " that's not",
+    ]
+    try:
+        conn = sqlite3.connect(str(db_path))
+        c = conn.cursor()
+        c.execute("SELECT content FROM messages WHERE role='user'")
+        count = 0
+        for row in c.fetchall():
+            text = (row[0] or '').lower()
+            if any(kw in text for kw in keywords):
+                count += 1
+        conn.close()
+        return count
+    except Exception:
+        return 0
+
 def _merge_legacy_data(bond: dict, legacy: dict) -> dict:
     merged = dict(bond)
     old_xp = legacy.get("total_xp", 0) or legacy.get("cumulative_xp", 0)
@@ -182,16 +219,18 @@ def audit():
     bond["total_interactions"] = max(bond.get("total_interactions", 0), db_stats["interactions"])
     bond["total_tool_calls"] = max(bond.get("total_tool_calls", 0), db_stats["tool_calls"])
 
-    # Compute XP from DB stats
-    db_base_xp = bond["total_interactions"] * 1 + bond["total_tool_calls"] * 2
-    history_xp = sum(h.get("xp", 0) for h in bond.get("history", []))
-    bond["cumulative_xp"] = max(db_base_xp, history_xp)
+    # Auto-detect tasks and corrections from session DB
+    auto_tasks = detect_tasks_from_db(SESSION_DB)
+    auto_corrections = detect_corrections_from_db(SESSION_DB)
+    bond["total_tasks_completed"] = max(bond.get("total_tasks_completed", 0), auto_tasks)
+    bond["corrections_learned"] = max(bond.get("corrections_learned", 0), auto_corrections)
 
-    # Recover corrections/tasks from history
-    bond["corrections_learned"] = max(bond.get("corrections_learned", 0),
-                                       sum(1 for h in bond.get("history", []) if h.get("source") == "correction"))
-    bond["total_tasks_completed"] = max(bond.get("total_tasks_completed", 0),
-                                         sum(1 for h in bond.get("history", []) if h.get("source") == "task"))
+    # Compute XP: base (+1 per msg, +2 per tool) + bonus (+10 per task, +8 per correction)
+    db_base_xp = bond["total_interactions"] * 1 + bond["total_tool_calls"] * 2
+    db_bonus_xp = bond["total_tasks_completed"] * 10 + bond["corrections_learned"] * 8
+    db_total_xp = db_base_xp + db_bonus_xp
+    history_xp = sum(h.get("xp", 0) for h in bond.get("history", []))
+    bond["cumulative_xp"] = max(db_total_xp, history_xp)
 
     # Recalculate level
     new_level = calc_level(bond["cumulative_xp"])
