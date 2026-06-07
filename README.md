@@ -217,6 +217,7 @@ AGON/
 ├── SOUL.md              # AGON's identity (read this first)
 ├── AGENTS.md            # All 82 agents and routing rules
 ├── README.md            # THIS FILE — the patch manifest
+├── AGON-CARD.jpg        # Champion Spotlight card
 ├── THERION.PNG          # Avatar/profile picture
 ├── agon-skin.yaml       # Custom terminal theme (bronze/gold)
 ├── agon                 # One-word CLI command (Linux/Mac)
@@ -229,16 +230,23 @@ AGON/
 ├── install.sh           # One-liner installer (Mac/Linux)
 ├── install.ps1          # One-liner installer (Windows)
 ├── install.bat          # Installer launcher (Windows double-click)
+├── .gitmodules          # WebUI is a git submodule
 ├── HERMES-CONFIG.md     # How to configure Hermes for AGON
 ├── BOOTSTRAP.md         # Detailed setup guide
 ├── PROMPT-GUIDE.md      # How to talk to AGON
 ├── .github/agents/      # 12 legacy domain files (preserved)
-└── WebUI/               # Bundled Hermes WebUI (75MB)
+└── WebUI/               # Git submodule → nesquena/hermes-webui
     ├── start.sh         # Official Hermes WebUI launcher
     ├── start.ps1        # Official Hermes WebUI launcher (Windows)
     ├── bootstrap.py     # First-run setup script
     └── server.py        # Web server entry point
 ```
+
+> **Clone with submodules:**
+> `git clone --recursive https://github.com/erevussystems/hermes-agon.git`
+>
+> **Or init after cloning:**
+> `git submodule update --init WebUI`
 
 ---
 
@@ -253,6 +261,7 @@ The daimon does not serve. The daimon **strives**.
 
 > ![AGON Champion Spotlight](AGON-CARD.jpg)
 >
-> **AGON (ΑΓΩΝ)** — The daimon of contest.  
-> 82 minds. Infinite levels. One blade.  
-> **DEUS VULT.**
+> **AGON — THE RELENTLESS FORCE**  
+> DARK · BEASTKIN · CHAMPION · CHAOTIC NEUTRAL  
+> XP, levels, unlocks. Every interaction earns something.  
+> **BOND. EVOLVE. CONQUER.**

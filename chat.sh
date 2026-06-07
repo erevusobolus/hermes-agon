@@ -29,12 +29,14 @@ echo ""
 if [ ! -d "$WEBUI_DIR" ]; then
     fail "WebUI directory not found at:"
     echo "      $WEBUI_DIR"
-    echo "      Make sure the 'WebUI' folder is present next to this script."
+    echo "      Run install.sh first, or:"
+    echo "        git submodule update --init WebUI"
     exit 1
 fi
 if [ ! -f "$WEBUI_DIR/start.sh" ]; then
     fail "start.sh not found in WebUI directory."
-    echo "      The WebUI folder may be incomplete."
+    echo "      Run install.sh first, or:"
+    echo "        git submodule update --init WebUI"
     exit 1
 fi
 

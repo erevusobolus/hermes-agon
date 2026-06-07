@@ -100,8 +100,20 @@ for t in file web terminal browser vision skills memory delegation cronjob todo;
 done
 ok "Toolsets enabled"
 
-# ─── 9. Web Chat deps ──────────────────────────────────────────────────────
+# --- 9. Web Chat deps ------------------------------------------------------
 head "Web Chat"
+
+# Initialize WebUI submodule if needed
+if [ ! -f "$AGON_ROOT/WebUI/start.sh" ]; then
+    warn "WebUI not initialized. Cloning..."
+    if command -v git &>/dev/null && [ -d "$AGON_ROOT/.git" ]; then
+        (cd "$AGON_ROOT" && git submodule update --init WebUI) 2>/dev/null || true
+    fi
+    if [ ! -f "$AGON_ROOT/WebUI/start.sh" ]; then
+        git clone https://github.com/nesquena/hermes-webui.git "$AGON_ROOT/WebUI" 2>/dev/null || true
+    fi
+fi
+
 if [ -d "$AGON_ROOT/WebUI" ]; then
     cd "$AGON_ROOT/WebUI"
     pip install pyyaml cryptography -q 2>/dev/null || true

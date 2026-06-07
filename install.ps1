@@ -152,6 +152,22 @@ Write-Host "  [ok] Toolsets enabled" -ForegroundColor Green
 Write-Host ""
 Write-Host "  -- Patch: Web Chat --------------------------" -ForegroundColor DarkCyan
 $webuiDir = $AGON_ROOT + "\WebUI"
+
+# Check if WebUI submodule needs initialization
+if (-not (Test-Path ($webuiDir + "\start.ps1"))) {
+    Write-Host "     WebUI not initialized. Cloning..." -ForegroundColor Yellow
+    $hasGit = Get-Command "git" -ErrorAction SilentlyContinue
+    if ($hasGit -and (Test-Path ($AGON_ROOT + "\.git"))) {
+        Push-Location $AGON_ROOT
+        & git submodule update --init WebUI 2>&1 | Out-Null
+        Pop-Location
+    } else {
+        Push-Location $AGON_ROOT
+        & git clone https://github.com/nesquena/hermes-webui.git WebUI 2>&1 | Out-Null
+        Pop-Location
+    }
+}
+
 if (Test-Path $webuiDir) {
     Push-Location $webuiDir
     try {

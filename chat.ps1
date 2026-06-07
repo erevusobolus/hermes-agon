@@ -41,7 +41,8 @@ Write-Host ""
 if (-not (Test-Path $WEBUI_DIR -PathType Container)) {
     Write-Host "  [X] WebUI directory not found at:" -ForegroundColor Red
     Write-Host "      $WEBUI_DIR" -ForegroundColor White
-    Write-Host "      Make sure the 'WebUI' folder is present next to this script." -ForegroundColor Yellow
+    Write-Host "      Run install.ps1 first, or:" -ForegroundColor Yellow
+    Write-Host "        git submodule update --init WebUI" -ForegroundColor White
     pause; exit 1
 }
 $startPs1 = $WEBUI_DIR + "\start.ps1"
