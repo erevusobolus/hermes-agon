@@ -81,7 +81,7 @@ def _bar(pct):
     return "[" + "#" * filled + "." * (BAR_W - filled) + "]"
 
 # ── ASCII frame helpers ──────────────────────────────────────────────
-W = 60  # interior width
+W = 42  # interior width (44 total with borders — mobile-friendly)
 
 def _rule():
     return "+" + "-" * W + "+"
@@ -107,7 +107,7 @@ def _ll(label, value):
     """Two-column label:value."""
     l = str(label)
     v = str(value)
-    line = " " + l + " " * (14 - len(l)) + v
+    line = " " + l + " " * (12 - len(l)) + v
     if len(line) > W:
         line = line[:W]
     return "|" + line + " " * (W - len(line)) + "|"
@@ -130,7 +130,7 @@ def format_level(data):
     lines = []
     lines.append("```")
     lines.append(_rule())
-    lines.append(_line("A G O N   B O N D I N G   R E P O R T"))
+    lines.append(_line("AGON BONDING REPORT"))
     lines.append(_rule())
 
     # Level + bar
@@ -144,7 +144,7 @@ def format_level(data):
     lines.append(_rule())
 
     # Stats
-    lines.append(_l("B A T T L E   S T A T S"))
+    lines.append(_l("STATS"))
     lines.append(_rule())
 
     stat_rows = [
@@ -187,7 +187,7 @@ def format_bond(data):
     lines = []
     lines.append("```")
     lines.append(_rule())
-    lines.append(_line("A G O N   F U L L   B O N D"))
+    lines.append(_line("AGON FULL BOND"))
     lines.append(_rule())
 
     # User info
@@ -204,7 +204,7 @@ def format_bond(data):
     lines.append(_rule())
 
     # Stats
-    lines.append(_l("S T A T I S T I C S"))
+    lines.append(_l("STATS"))
     lines.append(_rule())
 
     all_stats = [
