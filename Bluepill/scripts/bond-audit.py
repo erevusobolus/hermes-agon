@@ -178,6 +178,14 @@ def audit():
     bond["total_interactions"] = max(bond.get("total_interactions", 0), db_stats["interactions"])
     bond["total_tool_calls"] = max(bond.get("total_tool_calls", 0), db_stats["tool_calls"])
 
+    # COMPUTE XP from real stats: +1 per interaction, +2 per tool call
+    # Plus any XP accumulated in history (tasks, corrections, daily, etc.)
+    db_base_xp = bond["total_interactions"] * 1 + bond["total_tool_calls"] * 2
+    history_xp = sum(h.get("xp", 0) for h in bond.get("history", []))
+    # Don't double-count: if history already contributed XP that covers DB stats,
+    # keep the higher value. Use max to handle both scenarios.
+    bond["cumulative_xp"] = max(db_base_xp, history_xp)
+
     # Recover corrections/tasks from history
     bond["corrections_learned"] = max(bond.get("corrections_learned", 0),
                                        detect_corrections_in_history(bond))

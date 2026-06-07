@@ -4,11 +4,20 @@ AGON Bonding Utility — reads bonding.json and renders /level and /bond output.
 Used by gateway/run.py handlers for the /level and /bond slash commands.
 Supports the AGON bonding schema (version, level, cumulative_xp, ...).
 """
-import json
+import json, os
 from pathlib import Path
 
-HERMES_HOME = Path(__file__).resolve().parent
-BONDING_FILE = HERMES_HOME / "bonding.json"
+_hermes_home_env = os.environ.get("HERMES_HOME", "").strip()
+if _hermes_home_env:
+    HERMES_HOME = Path(_hermes_home_env)
+else:
+    candidate = Path.home() / "AppData" / "Local" / "hermes"
+    if candidate.is_dir():
+        HERMES_HOME = candidate
+    else:
+        HERMES_HOME = Path.home() / ".hermes"
+
+BONDING_FILE = HERMES_HOME / "agon" / "bonding.json"
 
 TITLES = {
     1: "Stranger", 2: "Acquaintance", 3: "Friend", 4: "Companion",

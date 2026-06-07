@@ -2,19 +2,12 @@
   "version": 1,
   "level": 1,
   "cumulative_xp": 0,
-  "total_interactions": 1034,
-  "total_tool_calls": 919,
+  "total_interactions": 0,
+  "total_tool_calls": 0,
   "total_tasks_completed": 0,
   "corrections_learned": 0,
-  "skills_saved": 87,
+  "skills_saved": 0,
   "daily_streak": 0,
-  "last_active": "2026-06-07T21:21:34.685658",
-  "history": [
-    {
-      "ts": "2026-06-07T21:21:50.000000",
-      "event": "Bond reset — clean programmable start. All stats are auto-detected from filesystem (87 skills) and session DB (1034 interactions, 919 tool calls). Tasks, corrections, and XP start at 0 and are now tracked programmatically via bond-audit.py.",
-      "xp": 0,
-      "source": "reset"
-    }
-  ]
+  "last_active": "",
+  "history": []
 }
