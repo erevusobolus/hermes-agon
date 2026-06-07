@@ -12,10 +12,22 @@ from datetime import datetime, date
 from pathlib import Path
 
 # === Paths ===
-HERMES_HOME = Path.home() / ".hermes"
+_hermes_home_env = os.environ.get("HERMES_HOME", "").strip()
+if _hermes_home_env:
+    HERMES_HOME = Path(_hermes_home_env)
+else:
+    candidate = Path.home() / "AppData" / "Local" / "hermes"
+    if candidate.is_dir():
+        HERMES_HOME = candidate
+    else:
+        HERMES_HOME = Path.home() / ".hermes"
+
 BOND_FILE = HERMES_HOME / "agon" / "bonding.json"
 SKILLS_DIR = HERMES_HOME / "skills"
-SESSION_DB = HERMES_HOME / "state" / "sessions.db"
+SESSION_DB = HERMES_HOME / "state.db"
+
+# Also check legacy location and migrate if needed
+LEGACY_BOND = Path.home() / ".hermes" / "agon" / "bonding.json"
 
 # === Level Formula ===
 def calc_level(cumulative_xp: int) -> int:
@@ -89,37 +101,82 @@ def detect_corrections_in_history(bond: dict) -> int:
 def count_tasks_from_history(bond: dict) -> int:
     return sum(1 for h in bond.get("history", []) if h.get("source") == "task")
 
+def _merge_legacy_data(bond: dict, legacy: dict) -> dict:
+    """Merge data from legacy gateway schema into bonding.json."""
+    # Legacy gateway used different field names:
+    # bonding_level, total_xp, total_sessions, total_skills_created, 
+    # total_tasks_completed, total_corrections, unlocked_features
+    merged = dict(bond)
+    
+    # Take the HIGHER value for XP (honest tracking)
+    old_xp = legacy.get("total_xp", 0) or legacy.get("cumulative_xp", 0)
+    if old_xp > merged.get("cumulative_xp", 0):
+        merged["cumulative_xp"] = old_xp
+    
+    # Legacy fields that haven't been tracked in new system
+    for legacy_key, new_key in [
+        ("total_tasks_completed", "total_tasks_completed"),
+        ("total_corrections", "corrections_learned"),
+        ("total_skills_created", "skills_saved"),
+        ("total_sessions", "total_interactions"),
+    ]:
+        old_val = legacy.get(legacy_key, 0)
+        if old_val > merged.get(new_key, 0):
+            merged[new_key] = old_val
+    
+    # Preserve unlocked features
+    old_features = legacy.get("unlocked_features", [])
+    if old_features:
+        merged["unlocked_features"] = old_features
+    
+    # Preserve user info
+    for key in ["user_id", "platform", "first_bonded"]:
+        val = legacy.get(key)
+        if val and not merged.get(key):
+            merged[key] = val
+    
+    return merged
+
 # === Main Audit ===
 
 def audit():
     """Read bonding.json, audit stats, write corrected version."""
     bond = {"version": 1}
+    
+    # Try primary location first
     if BOND_FILE.exists():
         try:
             bond = json.loads(BOND_FILE.read_text(encoding="utf-8"))
         except Exception:
             bond = {"version": 1}
-
+    
+    # Migrate legacy data if available
+    if LEGACY_BOND.exists():
+        try:
+            legacy = json.loads(LEGACY_BOND.read_text(encoding="utf-8"))
+            bond = _merge_legacy_data(bond, legacy)
+        except Exception:
+            pass
+    
     defaults = {
         "version": 1, "level": 1, "cumulative_xp": 0,
         "total_interactions": 0, "total_tool_calls": 0,
         "total_tasks_completed": 0, "corrections_learned": 0,
         "skills_saved": 0, "daily_streak": 0,
         "last_active": datetime.now().isoformat(), "history": [],
+        "unlocked_features": [],
     }
     for k, v in defaults.items():
         bond.setdefault(k, v)
 
-    # Auto-detect skills
+    # Auto-detect skills (filesystem overrides manual)
     installed_skills = count_skills()
-    repo_skills = count_repo_skills()
-    total_skills = max(bond.get("skills_saved", 0), installed_skills, repo_skills)
+    bond["skills_saved"] = max(bond.get("skills_saved", 0), installed_skills)
 
-    # Auto-detect from session DB
+    # Auto-detect from session DB (overrides manual)
     db_stats = count_interactions_and_tool_calls(SESSION_DB)
     bond["total_interactions"] = max(bond.get("total_interactions", 0), db_stats["interactions"])
     bond["total_tool_calls"] = max(bond.get("total_tool_calls", 0), db_stats["tool_calls"])
-    bond["skills_saved"] = max(bond.get("skills_saved", 0), total_skills)
 
     # Recover corrections/tasks from history
     bond["corrections_learned"] = max(bond.get("corrections_learned", 0),
@@ -151,6 +208,7 @@ def add_xp(xp_amount: int, source: str, event: str) -> dict:
         "total_tasks_completed": 0, "corrections_learned": 0,
         "skills_saved": 0, "daily_streak": 0,
         "last_active": datetime.now().isoformat(), "history": [],
+        "unlocked_features": [],
     }.items():
         bond.setdefault(k, v)
 

@@ -1,44 +1,20 @@
 {
   "version": 1,
   "level": 1,
-  "cumulative_xp": 23,
-  "total_interactions": 1,
-  "total_tool_calls": 2,
-  "total_tasks_completed": 1,
-  "corrections_learned": 1,
-  "skills_saved": 18,
+  "cumulative_xp": 0,
+  "total_interactions": 1034,
+  "total_tool_calls": 919,
+  "total_tasks_completed": 0,
+  "corrections_learned": 0,
+  "skills_saved": 87,
   "daily_streak": 0,
-  "last_active": "2026-06-07T21:07:39.400335",
+  "last_active": "2026-06-07T21:21:34.685658",
   "history": [
     {
-      "ts": "2026-06-07T20:57:17.234405",
-      "event": "Bond reset — honest tracking starts now.",
+      "ts": "2026-06-07T21:21:50.000000",
+      "event": "Bond reset — clean programmable start. All stats are auto-detected from filesystem (87 skills) and session DB (1034 interactions, 919 tool calls). Tasks, corrections, and XP start at 0 and are now tracked programmatically via bond-audit.py.",
       "xp": 0,
       "source": "reset"
-    },
-    {
-      "ts": "2026-06-07T20:57:17.234405",
-      "event": "Honest tracking begins. XP now tracks in real-time per interaction.",
-      "xp": 1,
-      "source": "tracking_start"
-    },
-    {
-      "ts": "2026-06-07T20:57:38.989752",
-      "event": "Bond reset + memory update. 2 tool calls.",
-      "xp": 5,
-      "source": "tracking"
-    },
-    {
-      "ts": "2026-06-07T21:06:19.102830",
-      "event": "User corrected me about bonding stats being inaccurate - stats were 0 across the board, needed programmatic detection",
-      "xp": 8,
-      "source": "correction"
-    },
-    {
-      "ts": "2026-06-07T21:06:23.432523",
-      "event": "Built programmable bond-audit.py that auto-detects skills, sessions, tool_calls from filesystem - no more manual hardcoded stats",
-      "xp": 10,
-      "source": "task"
     }
   ]
 }
