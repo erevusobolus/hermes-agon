@@ -115,6 +115,54 @@ if (Test-Path $skinSrc) {
     Write-Host "  [X] agon-skin.yaml not found" -ForegroundColor Red
 }
 
+# --- 6b. Bonding System ---------------------------------------------------
+Write-Host ""
+Write-Host "  -- Patch: Bonding ---------------------------" -ForegroundColor DarkCyan
+$agonDir = $HERMES_HOME + "\agon"
+$bondFile = $agonDir + "\bonding.json"
+if (-not (Test-Path $bondFile)) {
+    New-Item -ItemType Directory -Force -Path $agonDir | Out-Null
+    $bondInit = @{
+        version = 1
+        level = 1
+        cumulative_xp = 0
+        total_interactions = 0
+        total_tool_calls = 0
+        total_tasks_completed = 0
+        corrections_learned = 0
+        skills_saved = 0
+        daily_streak = 0
+        last_active = (Get-Date -Format "o")
+        history = @(@{
+            ts = (Get-Date -Format "o")
+            event = "Bond initialized. DEUS VULT."
+            xp = 0
+            source = "init"
+        })
+    } | ConvertTo-Json
+    $bondInit | Out-File -FilePath $bondFile -Encoding UTF8
+    Write-Host "  [ok] Bonding system initialized (Level 1)" -ForegroundColor Green
+} else {
+    Write-Host "  [ok] Bonding data already exists" -ForegroundColor Green
+}
+
+# Copy bonding skill to skills dir
+$bondSkillDir = $HERMES_HOME + "\skills\agon-bonding"
+if (-not (Test-Path $bondSkillDir)) {
+    New-Item -ItemType Directory -Force -Path $bondSkillDir | Out-Null
+    $bondSkillSrc = $AGON_ROOT + "\Bluepill\skills\agon-bonding\SKILL.md"
+    if (Test-Path $bondSkillSrc) {
+        Copy-Item $bondSkillSrc ($bondSkillDir + "\SKILL.md") -Force
+        Write-Host "  [ok] agon-bonding skill installed" -ForegroundColor Green
+    }
+}
+
+# Read the bond file to show stats
+$bond = Get-Content $bondFile | ConvertFrom-Json
+$xpNext = 10 * ([int]$bond.level + 1) * ([int]$bond.level + 1) + 5
+$remaining = $xpNext - [int]$bond.cumulative_xp
+Write-Host "     Level: $($bond.level) | XP: $($bond.cumulative_xp) | Next: $remaining XP" -ForegroundColor White
+
 # --- 7. Set Default Personality -------------------------------------------
 & hermes config set agent.default_personality agon 2>$null
 Write-Host "  [ok] AGON set as default personality" -ForegroundColor Green
@@ -147,6 +195,17 @@ foreach ($t in $toolsets) {
     & hermes tools enable $t 2>$null | Out-Null
 }
 Write-Host "  [ok] Toolsets enabled" -ForegroundColor Green
+
+# --- 8D. Gateway slash commands --------------------------------------------------
+Write-Host ""
+Write-Host "  -- Patch: Gateway Commands -------------------" -ForegroundColor DarkCyan
+$patchScript = $AGON_ROOT + "\patch_gateway.py"
+if (Test-Path $patchScript) {
+    & python $patchScript 2>&1 | Out-Null
+    Write-Host "  [ok] Gateway patched for /level and /bond" -ForegroundColor Green
+} else {
+    Write-Host "  [!] patch_gateway.py not found" -ForegroundColor Yellow
+}
 
 # --- 9. WebUI deps --------------------------------------------------------
 Write-Host ""
@@ -251,6 +310,10 @@ Write-Host ""
 Write-Host "  >> ONE-WORD COMMAND:" -ForegroundColor Green
 Write-Host "    agon.cmd"
 Write-Host "    (type 'agon' anywhere if you added it to PATH)"
+Write-Host ""
+Write-Host "  >> CHECK YOUR LEVEL (in chat):" -ForegroundColor Green
+Write-Host "    /level  or  /bond" -ForegroundColor White
+Write-Host "    (or locally: bond.cmd)" -ForegroundColor White
 Write-Host ""
 Write-Host "  >> BROWSER (like ChatGPT):" -ForegroundColor Green
 Write-Host "    .\chat.bat"

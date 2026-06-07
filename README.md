@@ -173,6 +173,7 @@ No match? AGON **synthesizes** a hybrid agent from the closest domains. Always. 
 | `./chat.sh` | Linux/Mac | Open WebUI in browser |
 | `.\chat.bat` | Windows | Open WebUI in browser (double-click) |
 | `hermes chat` | Both | Chat with AGON (default personality) |
+| `bond` / `.\bond.cmd` | Both | Check your level, XP, stats |
 | `WAKE UP AGON` | Both | AGON trigger phrase |
 
 ---
@@ -235,6 +236,9 @@ AGON/
 ├── BOOTSTRAP.md         # Detailed setup guide
 ├── PROMPT-GUIDE.md      # How to talk to AGON
 ├── .github/agents/      # 12 legacy domain files (preserved)
+├── BONDING.md           # Leveling system specification
+├── bond                 # Check level, XP, stats (Linux/Mac)
+├── bond.cmd             # Check level, XP, stats (Windows)
 └── WebUI/               # Git submodule → nesquena/hermes-webui
     ├── start.sh         # Official Hermes WebUI launcher
     ├── start.ps1        # Official Hermes WebUI launcher (Windows)

@@ -83,11 +83,61 @@ for skill_dir in "$AGON_ROOT/Bluepill/skills" "$AGON_ROOT/Bluepill/domain-skills
 done
 ok "$INSTALLED skills installed"
 
-# ─── 6. Skin ───────────────────────────────────────────────────────────────
+# --- 6. Skin -------------------------------------------------------------------
 head "Skin"
 mkdir -p "$HOME/.hermes/skins"
 cp "$AGON_ROOT/agon-skin.yaml" "$HOME/.hermes/skins/agon.yaml" 2>/dev/null || true
 ok "AGON skin installed (bronze + gold)"
+
+# --- 6b. Bonding System --------------------------------------------------------
+head "Bonding"
+BOND_DIR="$HOME/.hermes/agon"
+BOND_FILE="$BOND_DIR/bonding.json"
+if [ ! -f "$BOND_FILE" ]; then
+    mkdir -p "$BOND_DIR"
+    cat > "$BOND_FILE" << 'BONDEOF'
+{
+  "version": 1,
+  "level": 1,
+  "cumulative_xp": 0,
+  "total_interactions": 0,
+  "total_tool_calls": 0,
+  "total_tasks_completed": 0,
+  "corrections_learned": 0,
+  "skills_saved": 0,
+  "daily_streak": 0,
+  "last_active": "",
+  "history": [
+    {"ts": "", "event": "Bond initialized. DEUS VULT.", "xp": 0, "source": "init"}
+  ]
+}
+BONDEOF
+    ok "Bonding system initialized (Level 1)"
+else
+    ok "Bonding data already exists"
+fi
+
+# Install bonding skill
+BOND_SKILL_DIR="$HOME/.hermes/skills/agon-bonding"
+BOND_SKILL_SRC="$AGON_ROOT/Bluepill/skills/agon-bonding/SKILL.md"
+if [ ! -d "$BOND_SKILL_DIR" ] && [ -f "$BOND_SKILL_SRC" ]; then
+    mkdir -p "$BOND_SKILL_DIR"
+    cp "$BOND_SKILL_SRC" "$BOND_SKILL_DIR/SKILL.md"
+    ok "agon-bonding skill installed"
+fi
+
+# Show bond stats
+if command -v python3 &>/dev/null; then
+    BOND_STATS=$(python3 -c "
+import json
+with open('$BOND_FILE') as f:
+    b = json.load(f)
+xp_next = 10 * (b['level'] + 1) ** 2 + 5
+remaining = xp_next - b['cumulative_xp']
+print(f\"Level {b['level']} | XP {b['cumulative_xp']} | Next {remaining} XP\")
+" 2>/dev/null || echo "Level 1 | XP 0")
+    echo "     $BOND_STATS"
+fi
 
 # ─── 7. Default personality ────────────────────────────────────────────────
 hermes config set agent.default_personality agon 2>/dev/null || true
@@ -99,6 +149,10 @@ for t in file web terminal browser vision skills memory delegation cronjob todo;
     hermes tools enable "$t" 2>/dev/null || true
 done
 ok "Toolsets enabled"
+
+# --- 8D. Gateway slash commands ------------------------------------------------
+head "Gateway Commands"
+python3 "$AGON_ROOT/patch_gateway.py" 2>/dev/null || python "$AGON_ROOT/patch_gateway.py" 2>/dev/null || warn "Could not patch gateway — run manually: python patch_gateway.py"
 
 # --- 9. Web Chat deps ------------------------------------------------------
 head "Web Chat"
@@ -201,6 +255,10 @@ echo ""
 echo "  >> ONE-WORD COMMAND:"
 echo "    agon"
 echo "    (if you added it to PATH, otherwise ./agon)"
+echo ""
+echo "  >> CHECK YOUR LEVEL (in chat):"
+echo "    /level  or  /bond"
+echo "    (or locally: ./bond)"
 echo ""
 echo "  >> BROWSER (like ChatGPT):"
 echo "    ./chat.sh"

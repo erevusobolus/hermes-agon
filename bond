@@ -1,0 +1,36 @@
+#!/usr/bin/env bash
+# bond — Check your AGON bonding level, XP, and stats.
+set -euo pipefail
+
+BOND_FILE="${HOME}/.hermes/agon/bonding.json"
+
+if [ ! -f "$BOND_FILE" ]; then
+    echo "  No bond data found. AGON has not bonded yet."
+    echo "  Run 'hermes chat' and interact with AGON to start bonding."
+    exit 1
+fi
+
+LEVEL=$(python3 -c "
+import json
+with open('$BOND_FILE') as f:
+    b = json.load(f)
+print(b['level'])
+print(b['cumulative_xp'])
+xp_next = 10 * (b['level'] + 1) ** 2 + 5
+print(xp_next - b['cumulative_xp'])
+")
+
+L=$(echo "$LEVEL" | sed -n '1p')
+XP=$(echo "$LEVEL" | sed -n '2p')
+XP_NEXT=$(echo "$LEVEL" | sed -n '3p')
+
+echo ""
+echo "  ╔══════════════════════════════════════╗"
+echo "  ║        AGON — BOND STATUS            ║"
+echo "  ╠══════════════════════════════════════╣"
+printf "  ║  Level:  %-30s║\n" "$L"
+printf "  ║  XP:     %-30s║\n" "$XP"
+printf "  ║  Next:   %-30s║\n" "$XP_NEXT XP"
+echo "  ╚══════════════════════════════════════╝"
+echo "  DEUS VULT."
+echo ""
