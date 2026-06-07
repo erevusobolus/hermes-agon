@@ -177,6 +177,8 @@ def audit():
         "total_tasks_completed": 0, "corrections_learned": 0,
         "skills_saved": 0, "daily_streak": 0,
         "last_active": datetime.now().isoformat(), "history": [],
+        "_last_db_interactions": 0, "_last_db_tool_calls": 0,
+        "_last_db_tasks": 0, "_last_db_corrections": 0,
     }
     for k, v in defaults.items():
         bond.setdefault(k, v)
@@ -187,21 +189,35 @@ def audit():
     bond["skills_saved"] = max(bond.get("skills_saved", 0), installed_skills)
 
     db_stats = count_interactions_and_tool_calls(SESSION_DB)
-    bond["total_interactions"] = max(bond.get("total_interactions", 0), db_stats["interactions"])
-    bond["total_tool_calls"] = max(bond.get("total_tool_calls", 0), db_stats["tool_calls"])
 
-    # Auto-detect tasks and corrections from session DB
+    # Additive tracking: store last DB snapshot, add only the delta each run.
+    # This survives DB pruning — new interactions always add, never capped by old peaks.
+    prev_db_int = bond.pop("_last_db_interactions", db_stats["interactions"])
+    prev_db_tool = bond.pop("_last_db_tool_calls", db_stats["tool_calls"])
+    prev_db_tasks = bond.pop("_last_db_tasks", detect_tasks_from_db(SESSION_DB))
+    prev_db_corr = bond.pop("_last_db_corrections", detect_corrections_from_db(SESSION_DB))
+
     auto_tasks = detect_tasks_from_db(SESSION_DB)
     auto_corrections = detect_corrections_from_db(SESSION_DB)
-    bond["total_tasks_completed"] = max(bond.get("total_tasks_completed", 0), auto_tasks)
-    bond["corrections_learned"] = max(bond.get("corrections_learned", 0), auto_corrections)
+
+    new_int = max(0, db_stats["interactions"] - prev_db_int)
+    new_tool = max(0, db_stats["tool_calls"] - prev_db_tool)
+    new_tasks = max(0, auto_tasks - prev_db_tasks)
+    new_corr = max(0, auto_corrections - prev_db_corr)
+
+    bond["total_interactions"] = bond.get("total_interactions", 0) + new_int
+    bond["total_tool_calls"] = bond.get("total_tool_calls", 0) + new_tool
+    bond["total_tasks_completed"] = bond.get("total_tasks_completed", 0) + new_tasks
+    bond["corrections_learned"] = bond.get("corrections_learned", 0) + new_corr
+
+    # Store current DB snapshot for next run
+    bond["_last_db_interactions"] = db_stats["interactions"]
+    bond["_last_db_tool_calls"] = db_stats["tool_calls"]
+    bond["_last_db_tasks"] = auto_tasks
+    bond["_last_db_corrections"] = auto_corrections
 
     # Compute XP: base (+1 per msg, +2 per tool) + bonus (+10 per task, +8 per correction)
-    db_base_xp = bond["total_interactions"] * 1 + bond["total_tool_calls"] * 2
-    db_bonus_xp = bond["total_tasks_completed"] * 10 + bond["corrections_learned"] * 8
-    db_total_xp = db_base_xp + db_bonus_xp
-    history_xp = sum(h.get("xp", 0) for h in bond.get("history", []))
-    bond["cumulative_xp"] = max(db_total_xp, history_xp)
+    bond["cumulative_xp"] = bond["total_interactions"] * 1 + bond["total_tool_calls"] * 2 + bond["total_tasks_completed"] * 10 + bond["corrections_learned"] * 8
 
     # Recalculate level
     new_level = calc_level(bond["cumulative_xp"])
@@ -241,6 +257,8 @@ def add_xp(xp_amount: int, source: str, event: str) -> dict:
         "total_tasks_completed": 0, "corrections_learned": 0,
         "skills_saved": 0, "daily_streak": 0,
         "last_active": datetime.now().isoformat(), "history": [],
+        "_last_db_interactions": 0, "_last_db_tool_calls": 0,
+        "_last_db_tasks": 0, "_last_db_corrections": 0,
     }.items():
         bond.setdefault(k, v)
 
