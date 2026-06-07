@@ -1,0 +1,57 @@
+# ============================================================================
+# AGON — HERMES AGENT GAMIFIED PATCH
+# ============================================================================
+
+# === PERSONAL CONFIGURATION ===
+private/
+archive/
+
+# === SECRETS & CREDENTIALS ===
+.env
+.env.*
+!.env.example
+secrets/
+credentials/
+
+# === PYTHON ===
+venv/
+.venv/
+__pycache__/
+*.pyc
+*.pyo
+*.egg-info/
+
+# === NODE MODULES ===
+node_modules/
+package-lock.json
+pnpm-lock.yaml
+
+# === OS FILES ===
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+*~
+
+# === BUILD OUTPUTS ===
+dist/
+build/
+.next/
+out/
+*.log
+
+# === IDE ===
+.idea/
+*.sublime-*
+.vscode/
+
+# === TEMP FILES ===
+tmp/
+temp/
+*.tmp
+*.bak
+*.backup
+
+# === WEBUI (keep the UI, exclude its submodules) ===
+WebUI/.git/
+WebUI/.github/

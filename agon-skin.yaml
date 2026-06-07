@@ -1,0 +1,80 @@
+# AGON Skin — Spirit of Contest
+# Place in ~/.hermes/skins/agon.yaml
+# Activate: /skin agon
+# Or set: display.skin: agon in config.yaml
+
+name: agon
+description: "AGON — The daimon of contest. Dark bronze and gold, warrior-poet aesthetic."
+
+colors:
+  # ── Banner ────────────────────────────────────────────────────────────
+  banner_border: "#CD7F32"            # Bronze — the metal of Olympia
+  banner_title: "#FFD700"             # Gold — the prize of champions
+  banner_accent: "#C4AB72"            # Antique gold — section headers
+  banner_dim: "#8B7355"              # Dark bronze — muted text
+  banner_text: "#FFF8DC"             # Cornsilk — body text
+
+  # ── UI ────────────────────────────────────────────────────────────────
+  ui_accent: "#C4AB72"               # Antique gold — general accent
+  ui_label: "#DAA520"                # Goldenrod — labels
+  ui_ok: "#6B8E23"                   # Olive green — success
+  ui_error: "#CD5C5C"                # Indian red — errors
+  ui_warn: "#DAA520"                 # Goldenrod — warnings
+
+  # ── Prompt / Input ────────────────────────────────────────────────────
+  prompt: "#FFF8DC"                  # Cornsilk — prompt text
+  input_rule: "#CD7F32"              # Bronze — input separator
+
+  # ── Response ──────────────────────────────────────────────────────────
+  response_border: "#C4AB72"         # Antique gold — response box
+
+  # ── Status Bar ────────────────────────────────────────────────────────
+  status_bar_bg: "#1C1C1C"           # Near-black — status background
+  status_bar_text: "#C0C0C0"         # Silver — default text
+  status_bar_strong: "#FFD700"       # Gold — highlighted
+  status_bar_dim: "#8B7355"          # Dark bronze — separators
+  status_bar_good: "#8FBC8F"         # Dark sea green — healthy
+  status_bar_warn: "#DAA520"         # Goldenrod — warning
+  status_bar_bad: "#CD853F"          # Peru — high usage
+  status_bar_critical: "#CD5C5C"     # Indian red — critical
+
+  # ── Session ───────────────────────────────────────────────────────────
+  session_label: "#C4AB72"           # Antique gold
+  session_border: "#8B7355"          # Dark bronze
+
+  # ── TUI ────────────────────────────────────────────────────────────────
+  voice_status_bg: "#1C1C1C"
+  selection_bg: "#2C2C3C"
+  completion_menu_bg: "#1C1C1C"
+  completion_menu_current_bg: "#2C2C3C"
+  completion_menu_meta_bg: "#1C1C1C"
+  completion_menu_meta_current_bg: "#2C2C3C"
+
+spinner:
+  waiting_faces:
+    - "(⚔)"        # Crossed swords — AGON fights for answers
+    - "(🏛)"        # Temple — the altar at Olympia
+    - "(▲)"        # Delta — the spirit of change
+    - "(⌁)"        # Power symbol — daimon energy
+  thinking_faces:
+    - "(⚔)"        # Contending
+    - "(🏛)"        # Contemplating
+    - "(<>)"       # Synthesizing
+  thinking_verbs:
+    - "forging"
+    - "striving"
+    - "contending"
+    - "hammering strategy"
+    - "sharpening the blade"
+  wings:
+    - ["⟪⚔", "⚔⟫"]
+    - ["⟪🏛", "🏛⟫"]
+    - ["⟪▲", "▲⟫"]
+
+branding:
+  agent_name: "AGON"
+  welcome: "The daimon awakens. 82 minds. One blade. What contest shall we enter?"
+  goodbye: "The contest never ends. DEUS VULT. ⚔"
+  response_label: " ⚔ AGON "
+  prompt_symbol: "⚔"
+  help_header: "(⚔)? AGON Commands"

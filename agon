@@ -1,0 +1,32 @@
+#!/usr/bin/env bash
+# AGON — Daimon of contest.
+# One-word command: start a Hermes chat with AGON active.
+# Install:  sudo ln -sf "$(pwd)/agon" /usr/local/bin/agon
+# Or:       cp agon ~/.local/bin/  (if ~/.local/bin is in PATH)
+# Source for startup init: echo "source $(pwd)/init.sh" >> ~/.bashrc
+
+set -euo pipefail
+
+AGON_ROOT="$(cd "$(dirname "$0")" && pwd)"
+
+# --- Ensure AGON config is applied ---------------------------------------
+HERMES_HOME="${HOME}/.hermes"
+
+# Apply skin
+SKIN_SRC="${AGON_ROOT}/agon-skin.yaml"
+SKIN_DST="${HERMES_HOME}/skins/agon.yaml"
+if [ -f "$SKIN_SRC" ]; then
+    mkdir -p "${HERMES_HOME}/skins"
+    cp "$SKIN_SRC" "$SKIN_DST" 2>/dev/null || true
+fi
+
+# Ensure AGON personality is default
+hermes config set agent.default_personality agon 2>/dev/null || true
+hermes config set model.default "deepseek/deepseek-v4-flash" 2>/dev/null || true
+hermes config set model.provider "nous" 2>/dev/null || true
+
+# Launch chat with AGON preloaded
+echo ""
+echo "  ⚔ AGON — daimon of contest. 82 minds. One blade."
+echo ""
+exec hermes chat "$@"
