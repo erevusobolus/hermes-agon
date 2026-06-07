@@ -1,36 +1,36 @@
 #!/usr/bin/env bash
-# bond — Check your AGON bonding level, XP, and stats.
+# bond — Check your AGON bonding level, XP, and stats (via programmable audit)
 set -euo pipefail
 
-BOND_FILE="${HOME}/.hermes/agon/bonding.json"
+AUDIT_SCRIPT="${HOME}/.hermes/agon/bond-audit.py"
+BONDING_PY="${HOME}/.hermes/agon/bonding.py"
 
-if [ ! -f "$BOND_FILE" ]; then
-    echo "  No bond data found. AGON has not bonded yet."
-    echo "  Run 'hermes chat' and interact with AGON to start bonding."
+if [ ! -f "$AUDIT_SCRIPT" ]; then
+    echo "  AGON audit script not found. Run 'install.sh' first."
     exit 1
 fi
 
-LEVEL=$(python3 -c "
+# Run audit to ensure stats are current, then display
+python3 "$AUDIT_SCRIPT" > /dev/null 2>&1 || true
+
+if [ -f "$BONDING_PY" ]; then
+    cd "$HOME/.hermes/agon" && python3 -c "
+from bonding import format_level, load_bonding
+print(format_level(load_bonding()))
+"
+else
+    # Fallback: raw JSON display
+    python3 -c "
 import json
-with open('$BOND_FILE') as f:
+with open('${HOME}/.hermes/agon/bonding.json') as f:
     b = json.load(f)
-print(b['level'])
-print(b['cumulative_xp'])
-xp_next = 10 * (b['level'] + 1) ** 2 + 5
-print(xp_next - b['cumulative_xp'])
-")
-
-L=$(echo "$LEVEL" | sed -n '1p')
-XP=$(echo "$LEVEL" | sed -n '2p')
-XP_NEXT=$(echo "$LEVEL" | sed -n '3p')
-
-echo ""
-echo "  ╔══════════════════════════════════════╗"
-echo "  ║        AGON — BOND STATUS            ║"
-echo "  ╠══════════════════════════════════════╣"
-printf "  ║  Level:  %-30s║\n" "$L"
-printf "  ║  XP:     %-30s║\n" "$XP"
-printf "  ║  Next:   %-30s║\n" "$XP_NEXT XP"
-echo "  ╚══════════════════════════════════════╝"
-echo "  DEUS VULT."
-echo ""
+print('')
+print('  AGON — BOND STATUS')
+print(f'  Level:  {b[\"level\"]}')
+print(f'  XP:     {b[\"cumulative_xp\"]}')
+next_xp = 10 * (b['level'] + 1) ** 2 + 5
+print(f'  Next:   {next_xp - b[\"cumulative_xp\"]} XP')
+print('')
+print('  DEUS VULT.')
+"
+fi
