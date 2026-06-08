@@ -66,6 +66,10 @@ That's it. Your browser opens to a dark, three-panel chat UI where you can:
 
 ![AGON WebUI — Three-panel layout with bonding dashboard](WebUI/docs/images/agon-webui.jpg)
 
+![AGON Telegram — Bonding report in chat](WebUI/docs/images/agon-telegram.jpg)
+
+*Available on WebUI, Telegram, and terminal — same AGON, same bonding.*
+
 ---
 
 ## What Is This?
