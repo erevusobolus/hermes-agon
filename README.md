@@ -284,14 +284,12 @@ AGON/
 
 AGPL-3.0 — Free. Open source. Yours to patch, fork, and improve.
 
-Built by **[EREVUS](https://erevus.space)**.  
-The daimon does not serve. The daimon **strives**.
+Built by **[EREVUS](https://erevus.space)** — We Build What Lasts.  
 
 ---
 
-> ![AGON Champion Spotlight](AGON-CARD.jpg)
+> ![AGON](AGON-CARD.jpg)
 >
-> **AGON — THE RELENTLESS FORCE**  
-> DARK · BEASTKIN · CHAMPION · CHAOTIC NEUTRAL  
+> **AGON — Patch for Hermes Agent**  
 > XP, levels, unlocks. Every interaction earns something.  
 > **BOND. EVOLVE. CONQUER.**
