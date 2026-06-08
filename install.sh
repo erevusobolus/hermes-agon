@@ -1,6 +1,6 @@
 #!/bin/bash
 # AGON Installer — Applies the gamified patch to Hermes Agent.
-# Run: curl -fsSL https://raw.githubusercontent.com/erevussystems/hermes-agon/main/install.sh | bash
+# Run: curl -fsSL https://raw.githubusercontent.com/erevusobolus/hermes-agon/main/install.sh | bash
 # Or:  ./install.sh
 
 set -e

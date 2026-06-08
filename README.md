@@ -86,7 +86,7 @@ That's it. Your browser opens to a dark, three-panel chat UI where you can:
 
 ```bash
 # Install once:
-git clone https://github.com/erevussystems/hermes-agon.git
+git clone https://github.com/erevusobolus/hermes-agon.git
 cd hermes-agon
 
 # Linux/Mac:
@@ -106,7 +106,7 @@ WAKE UP AGON
 
 **One-liner (Hermes must already be installed):**
 ```bash
-curl -fsSL https://raw.githubusercontent.com/erevussystems/hermes-agon/main/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/erevusobolus/hermes-agon/main/install.sh | bash
 ```
 
 ---
@@ -273,7 +273,7 @@ AGON/
 ```
 
 > **Clone with submodules:**
-> `git clone --recursive https://github.com/erevussystems/hermes-agon.git`
+> `git clone --recursive https://github.com/erevusobolus/hermes-agon.git`
 >
 > **Or init after cloning:**
 > `git submodule update --init WebUI`
