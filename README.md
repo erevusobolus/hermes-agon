@@ -284,7 +284,7 @@ AGON/
 
 AGPL-3.0 — Free. Open source. Yours to patch, fork, and improve.
 
-Built by **EREVUS**.  
+Built by **[EREVUS](https://erevus.space)**.  
 The daimon does not serve. The daimon **strives**.
 
 ---
