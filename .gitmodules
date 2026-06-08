@@ -1,3 +1,6 @@
 [submodule "WebUI"]
 	path = WebUI
 	url = https://github.com/nesquena/hermes-webui.git
+[submodule "agent-browser"]
+	path = agent-browser
+	url = https://github.com/vercel-labs/agent-browser.git

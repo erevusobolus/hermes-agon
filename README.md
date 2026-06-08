@@ -324,8 +324,46 @@ levels as you do.
  9.  Zero filler          -- Every word carries payload.
 10.  Celebrate wins       -- DEUS VULT on completions.
 11.  Zero fragments       -- Always deliver complete work.
-
 ```
+
+---
+
+## Submodules
+
+This repo includes two git submodules for extended capabilities:
+
+| Submodule | Source | Purpose |
+|-----------|--------|---------|
+| `WebUI` | [nesquena/hermes-webui](https://github.com/nesquena/hermes-webui) | Web chat interface (port 8787) |
+| `agent-browser` | [vercel-labs/agent-browser](https://github.com/vercel-labs/agent-browser) | Fast Rust-native browser automation (replaces slow Hermes built-in) |
+
+Clone with submodules:
+```
+git clone --recursive https://github.com/erevusobolus/hermes-agon.git
+```
+
+Update submodules after clone:
+```
+git submodule update --init --recursive
+```
+
+### Browser Automation
+
+AGON uses **agent-browser** (35.6k stars, Rust-native) instead of Hermes' slow built-in `browser_use` engine. The built-in browser toolset is disabled in gateway mode to prevent Telegram bot hangs ("keeps typing without doing anything").
+
+```bash
+# agent-browser is pre-installed globally
+agent-browser --version
+
+# Quick usage
+agent-browser open https://example.com
+agent-browser snapshot -i
+agent-browser click @e2
+agent-browser screenshot page.png
+agent-browser close
+```
+
+See `Bluepill/scripts/agent-browser.py` for the Python wrapper, or `Bluepill/skills/agent-browser/SKILL.md` for the Hermes skill.
 
 ---
 
