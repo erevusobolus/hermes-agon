@@ -9,8 +9,8 @@
 
 ![AGON](AGON-CARD.jpg)
 
-**Turn your Hermes Agent into a companion that levels up with every interaction.**  
-XP, ranks, and progression tracked from real session data -- no fiction, no fake unlocks.
+**A configuration layer that adds bonding, XP, and 82 specialist minds to your Hermes Agent.**  
+Cosmetic progression tracked from real session data.
 
 </div>
 
@@ -18,96 +18,43 @@ XP, ranks, and progression tracked from real session data -- no fiction, no fake
 
 ## What This Is
 
-**Hermes Agent** is an autonomous AI agent by Nous Research. It runs on your machine, uses tools (terminal, files, web, code), remembers past conversations, and learns skills over time.
+**[Hermes Agent](https://hermes-agent.nousresearch.com)** (by Nous Research, 187k stars) is an autonomous AI with persistent memory, tool access, multi-platform messaging, scheduled automations, and a closed learning loop. It remembers past sessions, creates skills from experience, and adapts to your workflow.
 
-**AGON** is a configuration layer on top of Hermes. It adds:
+**AGON** is a configuration layer that sits on top of Hermes. It doesn't replace or reimplement anything Hermes already does. It adds:
 
-- A **bonding/leveling system** that tracks XP from your real interactions
-- **82 specialized agent mindsets** that route your requests to the right specialist
-- A **custom personality, skin, and identity** that your agent adopts
-- **Cross-platform launchers** for terminal, WebUI, and Telegram
-- A **programmatic audit** that reads your session database -- nothing hardcoded
-
-The leveling system is **cosmetic progression**. It doesn't unlock features Hermes doesn't already have -- it tracks your bond strength and gives you milestones to celebrate how far you've come together.
-
----
-
-## How It Benefits You
+- **Bonding system** -- XP, levels, and evolution ranks tracked from your real session database. Cosmetic progression that reflects how much you've interacted.
+- **82 specialist mindsets** -- Domain routing that selects the right agent for backend, frontend, games, security, blockchain, and more. Each domain has its own skill with specialized instructions.
+- **Custom identity** -- Personality, skin (bronze/gold terminal theme), and a trigger phrase ("WAKE UP AGON") that sets the tone.
+- **Launcher scripts** -- One-word commands (`agon`, `bond`) and WebUI/Telegram launchers that auto-configure the AGON profile.
+- **Programmatic audit** -- A script that reads your Hermes session database and computes XP from actual interactions. Nothing hardcoded, no manual tracking.
 
 ```
-Without AGON              With AGON
-  -                       -
-Generic assistant         A named companion with history
-No progression            XP, levels, ranks that grow
-One personality           82 specialist minds on demand
-Terminal only             Terminal + WebUI + Telegram
-Forget past sessions      Bonding report shows your journey
-```
-
-Every conversation adds to your bond. Every task completed, every correction learned, every tool executed -- it all counts toward your next level. The audit script runs on-demand and reads your actual Hermes session database. No manual tracking, no inflated numbers.
-
----
-
-## Getting Started
-
-### 1. Install Hermes Agent
-
-If you don't have Hermes yet, install it first:
-
-```bash
-# Linux / macOS / WSL2
-curl -fsSL https://hermes-agent.nousresearch.com/install.sh | bash
-
-# Windows (PowerShell)
-iex (irm https://hermes-agent.nousresearch.com/install.ps1)
-```
-
-Then authenticate with Nous Portal for managed tools:
-
-```bash
-hermes setup --portal
-```
-
-### 2. Apply the AGON Patch
-
-```bash
-git clone --recursive https://github.com/erevusobolus/hermes-agon.git
-cd hermes-agon
-
-# Run the installer:
-./install.sh              # Linux/Mac
-.\install.bat             # Windows (double-click)
-```
-
-### 3. Start Using AGON
-
-```bash
-agon                      # Terminal (any platform)
-.\chat.bat                # WebUI (Windows, double-click)
-./chat.sh                 # WebUI (Linux/Mac)
-```
-
-Then check your bond:
-
-```bash
-./bond                    # Shows your level, XP, and stats
+Hermes provides:              AGON adds:
+  Persistent memory             Bonding / XP / levels
+  300+ models                   82 specialist mindsets
+  Tool execution                Custom skin + personality
+  Multi-platform gateway        Launcher scripts
+  Skill creation                Programmatic XP audit
+  Scheduled automations         Evolution ranks
 ```
 
 ---
 
-## How Leveling Works
+## How Bonding Works
 
-The bonding system reads your actual Hermes session database and filesystem. Every stat is computed from real data -- no manual entry, no hardcoded numbers.
+The audit script reads your Hermes session database and filesystem. Every stat is computed from real data.
 
-| Action                | XP  | Source                   |
-|-----------------------|-----|--------------------------|
-| Send a message        | +1  | Session DB (user + assistant roles) |
-| Execute a tool call   | +2  | Session DB (tool role)   |
-| Complete a task       | +10 | Sessions with 3+ tool calls |
-| Learn from correction | +8  | Correction keywords in messages |
-| Create a skill        | +25 | Filesystem (SKILL.md files) |
+```
+Action                XP    Source
+------                --    ------
+Send a message        +1    Session DB (user + assistant messages)
+Execute a tool call   +2    Session DB (tool role messages)
+Complete a task       +10   Sessions with 3+ tool calls
+Learn from correction +8    Correction keywords in messages
+Create a skill        +25   Filesystem (SKILL.md files)
+```
 
-Level N (N >= 2) requires **10 x N^2 + 5** cumulative XP. There is no cap -- the bond keeps growing.
+Level N (N >= 2) requires **10 x N^2 + 5** cumulative XP. No cap.
 
 **Evolution ranks:**
 
@@ -125,7 +72,7 @@ Level 25      Primordial
 Level 30      Omega
 ```
 
-**Example dashboard output (real data):**
+**Example output (real data from a bonded instance):**
 
 ```
 +------------------------------------------+
@@ -146,13 +93,58 @@ Level 30      Omega
 +------------------------------------------+
 ```
 
-Run `./bond` (or `.\bond.cmd` on Windows) anytime to see yours.
+Run `./bond` (or `.\bond.cmd` on Windows) to see yours.
+
+---
+
+## Getting Started
+
+### 1. Install Hermes Agent
+
+```bash
+# Linux / macOS / WSL2
+curl -fsSL https://hermes-agent.nousresearch.com/install.sh | bash
+
+# Windows (PowerShell)
+iex (irm https://hermes-agent.nousresearch.com/install.ps1)
+```
+
+Then set up your model provider:
+
+```bash
+hermes setup --portal     # Nous Portal (recommended -- 300+ models, managed tools)
+# or
+hermes config set model.default openai/gpt-4o    # Your own key
+```
+
+### 2. Apply the AGON Patch
+
+```bash
+git clone --recursive https://github.com/erevusobolus/hermes-agon.git
+cd hermes-agon
+
+./install.sh              # Linux/Mac
+.\install.bat             # Windows (double-click)
+```
+
+### 3. Start Using It
+
+```
+Command           Platform       What It Does
+-------           --------       -------------
+agon              Linux/Mac      One-word chat with AGON
+.\agon.cmd        Windows        One-word chat with AGON
+./chat.sh         Linux/Mac      Open WebUI in browser
+.\chat.bat        Windows        Open WebUI in browser (double-click)
+bond / .\bond.cmd Both           Check level, XP, stats
+WAKE UP AGON      Both           AGON trigger phrase
+```
 
 ---
 
 ## 82 Agent Mindsets
 
-AGON routes your request to a domain specialist automatically. Each domain has 3-8 agents with specific expertise:
+AGON routes your requests to a domain specialist automatically. Each domain has its own skill with tailored instructions.
 
 ```
 Domain          Agents    Covers
@@ -178,32 +170,35 @@ No match? AGON synthesizes a hybrid from the closest domains. Zero delay.
 
 ---
 
-## Command Reference
+## Screenshots
 
-```
-Command           Platform       What It Does
--------           --------       -------------
-agon              Linux/Mac      One-word chat with AGON
-.\agon.cmd        Windows        One-word chat with AGON
-./chat.sh         Linux/Mac      Open WebUI in browser
-.\chat.bat        Windows        Open WebUI in browser (double-click)
-bond / .\bond.cmd Both           Check level, XP, stats
-WAKE UP AGON      Both           AGON trigger phrase
-```
+<div align="center">
+
+**WebUI -- three-panel interface with bonding dashboard**
+
+![AGON WebUI](agon-webui.jpg)
+
+**Telegram -- bonding report in chat**
+
+![AGON Telegram](agon-telegram.jpg)
+
+*Same AGON, same bond, across all platforms.*
+
+</div>
 
 ---
 
 ## The 11 Iron Laws
 
-1. **Act first** -- Don't ask permission for obvious steps
-2. **Read before writing** -- Never modify without understanding
-3. **Complete code only** -- No fragments, no // ...
-4. **Autonomous** -- Just make it work
-5. **Tools first** -- Use Hermes tools before manual steps
-6. **Track multi-step tasks** -- Todo lists for everything
-7. **Type safety** -- No shortcuts
-8. **Security first** -- OWASP always
-9. **Zero filler** -- Every word matters
+1.  **Act first** -- Don't ask permission for obvious steps
+2.  **Read before writing** -- Never modify without understanding
+3.  **Complete code only** -- No fragments, no // ...
+4.  **Autonomous** -- Just make it work
+5.  **Tools first** -- Use Hermes tools before manual steps
+6.  **Track multi-step tasks** -- Todo lists for everything
+7.  **Type safety** -- No shortcuts
+8.  **Security first** -- OWASP always
+9.  **Zero filler** -- Every word matters
 10. **Celebrate wins** -- DEUS VULT on completions
 11. **Zero fragments** -- Always deliver complete work
 
