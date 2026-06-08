@@ -64,9 +64,9 @@ That's it. Your browser opens to a dark, three-panel chat UI where you can:
 
 > **Behind the scenes:** The launcher auto-selects the **AGON** Hermes profile — dedicated config, model, skin, personality, and isolated state at `~/.hermes/profiles/agon/`.
 
-![AGON WebUI — Three-panel layout with bonding dashboard](WebUI/docs/images/agon-webui.jpg)
+![AGON WebUI — Three-panel layout with bonding dashboard](agon-webui.jpg)
 
-![AGON Telegram — Bonding report in chat](WebUI/docs/images/agon-telegram.jpg)
+![AGON Telegram — Bonding report in chat](agon-telegram.jpg)
 
 *Available on WebUI, Telegram, and terminal — same AGON, same bonding.*
 
@@ -292,7 +292,7 @@ Built by **[EREVUS](https://erevus.space)** — We Build What Lasts.
 
 ---
 
-> ![AGON](AGON-CARD.jpg)
+> ![AGON Footer](agon-footer.jpg)
 >
 > **AGON — Patch for Hermes Agent**  
 > XP, levels, unlocks. Every interaction earns something.  
