@@ -35,6 +35,11 @@ TITLES = {
     9: "Apex", 10: "Ascendant", 11: "Transcendent", 12: "Eternal",
     13: "Daimon", 14: "Olympian", 15: "Titan",
     20: "Aetherborn", 25: "Primordial", 30: "Omega",
+    35: "Singularity", 40: "Hyperion", 45: "Cosmarch",
+    50: "Ananke", 55: "Chronarch", 60: "Pantheon",
+    65: "Logos", 70: "Theophany", 75: "Aeon",
+    80: "Archangel", 85: "Absolute", 90: "Hypercosmic",
+    95: "Apeiron", 100: "Archon",
 }
 
 # No fabricated unlocks. Bonding is cosmetic — levels reflect bond strength,
