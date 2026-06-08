@@ -147,6 +147,12 @@ $env:HERMES_WEBUI_DEFAULT_MODEL = "deepseek/deepseek-v4-flash"
 $env:HERMES_WEBUI_HOST          = "127.0.0.1"
 $env:HERMES_WEBUI_PORT          = "8787"
 
+# Ensure hermes-agent is on sys.path (editable install or PYTHONPATH)
+$hermesAgent = "$env:USERPROFILE\AppData\Local\hermes\hermes-agent"
+if (Test-Path $hermesAgent) {
+    $env:PYTHONPATH = "$hermesAgent;$env:PYTHONPATH"
+}
+
 # --- 7. Summary ----------------------------------------------------------
 Write-Host ""
 Write-Host "==========================================================" -ForegroundColor Cyan
