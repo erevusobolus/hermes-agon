@@ -9,8 +9,8 @@
 
 ![AGON](AGON-CARD.jpg)
 
-**A configuration layer that adds bonding, XP, and 82 specialist minds to your Hermes Agent.**  
-Cosmetic progression tracked from real session data.
+**A configuration layer that adds context-routed specialist minds, XP-based bonding,
+and a curated identity to Hermes Agent.** Cosmetic progression from real session data.
 
 </div>
 
@@ -18,31 +18,104 @@ Cosmetic progression tracked from real session data.
 
 ## What This Is
 
-**[Hermes Agent](https://hermes-agent.nousresearch.com)** (by Nous Research, 187k stars) is an autonomous AI with persistent memory, tool access, multi-platform messaging, scheduled automations, and a closed learning loop. It remembers past sessions, creates skills from experience, and adapts to your workflow.
+**[Hermes Agent](https://hermes-agent.nousresearch.com)** (by Nous Research)
+is an autonomous AI with persistent memory, cross-platform messaging,
+tool execution, cron automation, skill creation, and a closed learning loop.
+It remembers everything across sessions -- no forgetting.
 
-**AGON** is a configuration layer that sits on top of Hermes. It doesn't replace or reimplement anything Hermes already does. It adds:
+**AGON** is a configuration layer that sits on top of Hermes. It doesn't
+replace or reimplement anything Hermes already does. It adds:
 
-- **Bonding system** -- XP, levels, and evolution ranks tracked from your real session database. Cosmetic progression that reflects how much you've interacted.
-- **82 specialist mindsets** -- Domain routing that selects the right agent for backend, frontend, games, security, blockchain, and more. Each domain has its own skill with specialized instructions.
-- **Custom identity** -- Personality, skin (bronze/gold terminal theme), and a trigger phrase ("WAKE UP AGON") that sets the tone.
-- **Launcher scripts** -- One-word commands (`agon`, `bond`) and WebUI/Telegram launchers that auto-configure the AGON profile.
-- **Programmatic audit** -- A script that reads your Hermes session database and computes XP from actual interactions. Nothing hardcoded, no manual tracking.
+- **Trigger Phase context loading** -- On every prompt, AGON loads a
+  5-file stack (SOUL + AGENTS + USER + MEMORY + domain mindset) that
+  shapes how the agent thinks, routes, and remembers.
+- **82 specialist mindsets** -- Domain routing across 15 fields. Your
+  question matches a domain; the matching mindset loads automatically.
+- **Bonding system** -- XP, levels, and evolution ranks computed from
+  your Hermes session database. Pure cosmetic progression.
+- **Programmatic audit** -- Reads state.db and the filesystem directly.
+  Nothing hardcoded, nothing faked.
+- **Launcher scripts** -- One-word commands (`agon`, `bond`) and WebUI
+  launchers that auto-configure the AGON profile.
 
 ```
 Hermes provides:              AGON adds:
-  Persistent memory             Bonding / XP / levels
-  300+ models                   82 specialist mindsets
-  Tool execution                Custom skin + personality
-  Multi-platform gateway        Launcher scripts
-  Skill creation                Programmatic XP audit
-  Scheduled automations         Evolution ranks
+  Persistent memory              Trigger Phase context loading
+  300+ models                    82 specialist mindsets
+  Tool execution                 Domain routing + on-the-fly synthesis
+  Multi-platform gateway         Bonding / XP / levels
+  Skill creation                 Identity skin + personality
+  Scheduled automations          Launcher scripts + audit
 ```
+
+Hermes already has memory. AGON doesn't "unlock" it -- it layers a
+context-loading architecture and cosmetic progression on top.
+
+---
+
+## Trigger Phase: Phase 0 Context Loading
+
+Every prompt you send triggers a 5-step load sequence. This is the
+core of the THERION architecture that AGON inherits:
+
+```
+STEP 1  SOUL.md              Identity, behavioral oath, personality
+STEP 2  AGENTS.md            82-agent index, routing rules, synthesis
+STEP 3  USER.md              Your name, preferences, project context
+STEP 4  MEMORY.md            Persistent knowledge (session/project/user)
+STEP 5  agents/{domain}.md   Deep mindset for detected domain (ONE)
+```
+
+How the routing works:
+
+```
+YOUR MESSAGE
+  |
+  v
+Keyword detection -- scan for domain signals
+  |
+  +-- Match found? --> Load that domain mindset
+  |
+  +-- No match?     --> Synthesize hybrid from 2-3 closest domains
+  |
+  +-- Multi-domain? --> Load primary, reference secondary from index
+  |
+  v
+Execute with matched mindset. **NEVER** load multiple domain files.
+Context is finite -- loading ONE deep file is better than five shallow ones.
+```
+
+The 15 domains and their signals:
+
+```
+Domain               Detected From                  Agents
+------               -------------                  ------
+Strategic Command    architecture, roadmap, plan      5
+Frontend             TypeScript, CSS, UI, responsive  8
+Frameworks           Next.js, Vue, React Native       8
+Backend              API, database, auth, services    8
+3D & Graphics        Three.js, WebGL, shaders         5
+Game Development     Unity, Unreal, Godot, netcode    5
+AI & ML              LLM, RAG, training, agents       5
+Security             OWASP, pentest, encryption        4
+DevOps & Cloud       Docker, K8s, CI/CD, deploy       6
+Systems Programming  Rust, C++, Go, embedded           4
+Blockchain & Web3    Solidity, Hedera, DeFi            3
+Execution & Support  Debug, fix, error, testing        6
+Hermes Configuration Config, gateway, skills, tools    5
+Assistant            Teaching, research, writing       6
+Promptcraft          Reasoning, self-improvement       4
+```
+
+No match? AGON synthesises a hybrid from the closest domains.
+Zero delay. No permission needed.
 
 ---
 
 ## How Bonding Works
 
-The audit script reads your Hermes session database and filesystem. Every stat is computed from real data.
+The audit script reads your Hermes session database and filesystem.
+Every stat comes from real data.
 
 ```
 Action                XP    Source
@@ -66,31 +139,31 @@ Level  6      Champion
 Level  8      Myth
 Level 10      Ascendant
 Level 13      Daimon
-Level 15      Titan        <-- current
+Level 15      Titan
 Level 20      Aetherborn
 Level 25      Primordial
 Level 30      Omega
 ```
 
-**Example output (real data from a bonded instance):**
+**Example dashboard output (real data):**
 
 ```
-+------------------------------------------+
-|           AGON BONDING REPORT            |
-+------------------------------------------+
-|  Level 17[########............]  44%     |
-| Title  TITAN                             |
-+------------------------------------------+
-| STATS                                    |
-+------------------------------------------+
-| XP          3,049                        |
-| Next        196 XP to L18                |
-| Sessions    1,005                        |
-| Tool Calls  843                          |
-| Skills      87                           |
-| Tasks       15                           |
-| Corrections 26                           |
-+------------------------------------------+
++----------------------------------------+
+|           AGON BONDING REPORT          |
++----------------------------------------+
+|  Level 17[########............]  44%   |
+|  Title  TITAN                         |
++----------------------------------------+
+| STATS                                |
++----------------------------------------+
+| XP          3,049                     |
+| Next        196 XP to L18             |
+| Sessions    1,005                     |
+| Tool Calls  843                       |
+| Skills      87                        |
+| Tasks       15                        |
+| Corrections 26                        |
++----------------------------------------+
 ```
 
 Run `./bond` (or `.\bond.cmd` on Windows) to see yours.
@@ -101,7 +174,7 @@ Run `./bond` (or `.\bond.cmd` on Windows) to see yours.
 
 ### 1. Install Hermes Agent
 
-```bash
+```
 # Linux / macOS / WSL2
 curl -fsSL https://hermes-agent.nousresearch.com/install.sh | bash
 
@@ -109,23 +182,27 @@ curl -fsSL https://hermes-agent.nousresearch.com/install.sh | bash
 iex (irm https://hermes-agent.nousresearch.com/install.ps1)
 ```
 
-Then set up your model provider:
+Then configure a model provider:
 
-```bash
-hermes setup --portal     # Nous Portal (recommended -- 300+ models, managed tools)
+```
+hermes setup --portal     # Nous Portal (300+ models, managed tools)
 # or
-hermes config set model.default openai/gpt-4o    # Your own key
+hermes config set model.default openai/gpt-4o
 ```
 
 ### 2. Apply the AGON Patch
 
-```bash
+```
 git clone --recursive https://github.com/erevusobolus/hermes-agon.git
 cd hermes-agon
 
 ./install.sh              # Linux/Mac
 .\install.bat             # Windows (double-click)
 ```
+
+The installer copies AGON's SOUL.md, AGENTS.md, USER.md, MEMORY.md,
+and domain skills into your Hermes profile. Every subsequent chat
+runs the Trigger Phase automatically.
 
 ### 3. Start Using It
 
@@ -134,39 +211,13 @@ Command           Platform       What It Does
 -------           --------       -------------
 agon              Linux/Mac      One-word chat with AGON
 .\agon.cmd        Windows        One-word chat with AGON
-./chat.sh         Linux/Mac      Open WebUI in browser
-.\chat.bat        Windows        Open WebUI in browser (double-click)
+./chat.sh         Linux/Mac      WebUI launcher (port 8787)
+.\chat.bat        Windows        WebUI launcher (double-click)
 bond / .\bond.cmd Both           Check level, XP, stats
-WAKE UP AGON      Both           AGON trigger phrase
 ```
 
----
-
-## 82 Agent Mindsets
-
-AGON routes your requests to a domain specialist automatically. Each domain has its own skill with tailored instructions.
-
-```
-Domain          Agents    Covers
--------         ------    ------
-Backend         8         APIs, databases, auth, microservices
-Frontend        8         TypeScript, CSS, UI, animations
-Frameworks      8         Next.js, Vue, React Native, Angular
-AI & ML         5         LLMs, RAG, fine-tuning, agents
-Systems         4         Rust, Go, C++, embedded
-Security        4         OWASP, pentesting, encryption
-DevOps          6         Docker, K8s, CI/CD, deploy
-Blockchain      3         Solidity, Hedera, DeFi
-Games           5         Unity, Unreal, Godot
-3D Graphics     5         Three.js, WebGL, WebGPU
-Support         6         Debugging, testing, code review
-Strategic       5         Architecture, planning, tech lead
-Hermes          5         Config, gateway, skills, tools
-Assistant       6         Teaching, research, writing
-Promptcraft     4         Reasoning, self-improvement
-```
-
-No match? AGON synthesizes a hybrid from the closest domains. Zero delay.
+That's it. Every message you send from that point on goes through
+the Trigger Phase.
 
 ---
 
@@ -190,17 +241,17 @@ No match? AGON synthesizes a hybrid from the closest domains. Zero delay.
 
 ## The 11 Iron Laws
 
-1.  **Act first** -- Don't ask permission for obvious steps
-2.  **Read before writing** -- Never modify without understanding
+1.  **Act first** -- Don't ask permission for obvious steps.
+2.  **Read before writing** -- Never modify without reading first.
 3.  **Complete code only** -- No fragments, no // ...
-4.  **Autonomous** -- Just make it work
-5.  **Tools first** -- Use Hermes tools before manual steps
-6.  **Track multi-step tasks** -- Todo lists for everything
-7.  **Type safety** -- No shortcuts
-8.  **Security first** -- OWASP always
-9.  **Zero filler** -- Every word matters
-10. **Celebrate wins** -- DEUS VULT on completions
-11. **Zero fragments** -- Always deliver complete work
+4.  **Autonomous** -- Just make it work.
+5.  **Tools first** -- Use Hermes tools before manual steps.
+6.  **Track multi-step tasks** -- Todo lists for everything.
+7.  **Type safety** -- No shortcuts.
+8.  **Security first** -- OWASP always.
+9.  **Zero filler** -- Every word carries payload.
+10. **Celebrate wins** -- DEUS VULT on completions.
+11. **Zero fragments** -- Always deliver complete work.
 
 ---
 
