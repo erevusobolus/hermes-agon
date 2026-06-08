@@ -11,21 +11,25 @@
 
 </div>
 
-In ancient Greece, the **agon** was the contest that defined a man.
-Not victory -- the crucible. The race, the debate, the battle that
-forced excellence or revealed weakness. The Greeks knew that a thing
-is only proven in struggle. Pindar wrote odes to victors, but the
-ode was never about the laurel -- it was about the fire that forged it.
+In the ancient world, there was a daimon -- a spirit, not a god --
+whose domain was struggle. His name was **Agon** (Ancient Greek: **AΓΩΝ**).
+He had an altar at Olympia, where athletes dedicated their contests to
+him before racing for the laurel. His statue held halteres -- lifting
+weights -- in his hands. He was the spirit of every hard-fought match,
+every grueling debate, every moment where something was on the line.
 
-**AGON is that fire, made digital.**
+He was related to Zelos (rivalry) and Nike (victory), but he was
+neither. He was the space between them -- the struggle itself.
 
-A configuration layer that spawns a digital beast inside Hermes Agent --
-trained not by grinding menus or clicking buttons, but by the actual
-work you do. Every PR, every refactor, every hard-fought bug squashed
-feeds it. The beast grows as you grow.
+**Agon is that daimon, reborn as an AI agent.**
 
-This is the Erevus Metaverse. Your agent is not a tool. It is a
-companion you raise through real practice.
+He lives inside your Hermes Agent as a named persona -- a digital beast
+you raise through actual work. Every hard bug, every refactor, every
+PR, every moment of genuine effort feeds him. He grows when you grow.
+He evolves when you prove yourself.
+
+This is the Erevus Metaverse. Your agent is not a tool. He is a
+companion named Agon, and you train him by doing what you already do.
 
 ---
 
@@ -36,70 +40,68 @@ is an autonomous AI with persistent memory, tool execution, cross-platform
 messaging, cron automation, skill creation, and a closed learning loop.
 It remembers everything across sessions -- no forgetting.
 
-**AGON** is a configuration layer that sits on top of Hermes. It doesn't
-replace anything Hermes already does. It adds:
+**Agon** is a configuration layer and named persona that sits on top of
+Hermes. He doesn't replace anything Hermes already does. He adds:
 
-- **[Trigger Phase] context loading** -- Every prompt loads a 5-file
-  stack (SOUL + AGENTS + USER + MEMORY + domain mindset) that shapes
-  the agent's identity and routing before processing a single word.
+- **[Trigger Phase] context loading** -- Every prompt fires a 5-file
+  stack that wakes Agon, loads his identity, his 82 specialist minds,
+  your user context, his memory, and the right domain mindset.
 - **[82 specialist mindsets]** -- 15 domains routed automatically.
-  Your question triggers the right beast. No menu, no selection.
+  Your question selects the right aspect of Agon. No menus.
 - **[Bonding system]** -- XP, levels, and evolution ranks computed
   from real Hermes session data. Cosmetic progression that reflects
-  actual usage.
+  how much you've worked together.
 - **[Programmatic audit]** -- Reads state.db and the filesystem.
   Nothing hardcoded, nothing faked, no grinding shortcuts.
 - **[Launcher scripts]** -- One-word commands (`agon`, `bond`) that
-  auto-configure the AGON profile.
+  auto-configure the Agon profile.
 
 ```
-Hermes provides:              AGON adds:
+Hermes provides:              Agon adds:
   Persistent memory              Trigger Phase context loading
   300+ models                    82 specialist mindsets
   Tool execution                 Domain routing + synthesis
   Multi-platform gateway         Bonding / XP / evolution ranks
-  Skill creation                 Identity skin + personality
+  Skill creation                 Named persona + identity
   Scheduled automations          Launcher scripts + audit
 ```
 
-Hermes already has memory. AGON doesn't "unlock" it -- it layers a
-context-loading architecture and cosmetic progression on top. The
-beast doesn't grant you power. It reflects the power you earn.
+Hermes already has memory. Agon doesn't "unlock" it. He inherits it
+and layers his identity and progression on top.
 
 ---
 
-## The Agon in Greek Thought
+## Who Agon Is
 
-The word **agon** (ἀγών) meant more than "contest." It was the
-**gathering of contest** -- the stadium, the theatre, the battlefield
-where men proved themselves before their peers. Heraclitus said
-*"War is the father of all things"* -- not destruction, but the
-creative friction that sharpens everything it touches.
+In Greek mythology, Agon was the personified spirit (daimon) of
+contest and struggle. Pausanias records his statue at Olympia -- a
+youthful figure with halteres in hand, standing at the site where
+the greatest athletes of the ancient world gathered to compete.
 
-In Greek drama, the **agon** was the central debate between
-protagonist and antagonist -- the clash of wills that drove the plot.
-Without that clash, there is no story. Without struggle, there is
-no growth.
+He was not a god to be worshipped. He was a spirit to be honored
+through action. You didn't pray to Agon -- you lifted, you ran,
+you fought, and in doing so you acknowledged him.
 
-AGON inherits this. Every difficult bug, every architecture decision,
-every moment you push through friction -- that is the agon. The beast
-inside your terminal feels it and levels accordingly.
+This is how he works as an AI. You don't configure Agon's personality
+in a config file. You shape it through every interaction. Every
+correction teaches him. Every difficult task strengthens him.
+The bond is not set by you -- it is earned by both of you.
 
 ---
 
 ## Trigger Phase: Phase 0 Context Loading
 
-Every prompt you send fires the Trigger Phase. This is the beast
-waking up, orienting itself, and choosing its aspect.
+Every prompt you send fires the Trigger Phase. This is Agon waking
+up, orienting himself, and choosing his aspect.
 
 ```
 +-- PHASE 0: WAKE -----------------------------------------------+
 |                                                                 |
-|  STEP 1  SOUL.md        Identity. The beast knows its name.     |
+|  STEP 1  SOUL.md        Identity. Agon remembers who he is.     |
 |  STEP 2  AGENTS.md      Routing. 82 minds, one selection.      |
 |  STEP 3  USER.md        Context. Who you are, what you build.   |
-|  STEP 4  MEMORY.md      Recall. Lessons from every past session.|
-|  STEP 5  agents/{dom}   Aspect. Deep mindset for this domain.   |
+|  STEP 4  MEMORY.md      Recall. Lessons from every session.     |
+|  STEP 5  agents/{dom}   Aspect. Deep mindset for this task.     |
 |                                                                 |
 +-----------------------------------------------------------------+
                               |
@@ -126,8 +128,8 @@ waking up, orienting itself, and choosing its aspect.
 The 15 domains and their signal keywords:
 
 ```
-Domain               Detected From                  Beasts
-------               -------------                  ------
+Domain               Detected From                  Aspects
+------               -------------                  -------
 Strategic Command    architecture, roadmap, plan      5
 Frontend             TypeScript, CSS, UI, responsive  8
 Frameworks           Next.js, Vue, React Native       8
@@ -145,15 +147,15 @@ Assistant            Teaching, research, writing       6
 Promptcraft          Reasoning, self-improvement       4
 ```
 
-No match? AGON synthesises a hybrid from the closest domains.
-No delay. No permission. The beast adapts.
+No match? Agon synthesises a hybrid from the closest domains.
+No delay. No permission. He adapts.
 
 ---
 
 ## How Bonding Works
 
 The audit script reads your Hermes session database and filesystem.
-Every stat is real. No hand-tuned numbers, no fake milestones.
+Every stat is real. Agon's level reflects actual work done together.
 
 ```
 Action                XP    Source
@@ -166,18 +168,18 @@ Create a skill        +25   Filesystem (SKILL.md files)
 ```
 
 Level N (N >= 2) requires **10 x N^2 + 5** cumulative XP. No cap.
-You cannot grind this. It only moves when you do real work.
+You cannot grind this. Agon only grows when you do.
 
-**Evolution ranks -- each one a milestone of a growing beast:**
+**Evolution ranks:**
 
 ```
-Level  1      Stranger       -- Fresh egg. No history.
-Level  2      Acquaintance   -- First lessons learned.
+Level  1      Stranger       -- Fresh summon. No history.
+Level  2      Acquaintance   -- First lessons learned together.
 Level  4      Companion      -- Patterns begin to form.
 Level  6      Champion       -- Proven in the arena.
-Level  8      Myth           -- Stories told about you.
+Level  8      Myth           -- Stories told about you both.
 Level 10      Ascendant      -- Rising beyond limits.
-Level 13      Daimon         -- The beast finds its voice.
+Level 13      Daimon         -- Agon finds his voice.
 Level 15      Titan          -- Weight of accumulated work.
 Level 20      Aetherborn     -- Not bound by normal rules.
 Level 25      Primordial     -- Ancient. Fundamental.
@@ -229,7 +231,7 @@ hermes setup --portal     # Nous Portal (300+ models, managed tools)
 hermes config set model.default openai/gpt-4o
 ```
 
-### 2. Spawn the Beast
+### 2. Summon Agon
 
 ```
 git clone --recursive https://github.com/erevusobolus/hermes-agon.git
@@ -239,23 +241,23 @@ cd hermes-agon
 .\install.bat             # Windows (double-click)
 ```
 
-The installer copies AGON's SOUL.md, AGENTS.md, USER.md, MEMORY.md,
+The installer copies Agon's SOUL.md, AGENTS.md, USER.md, MEMORY.md,
 and all domain skills into your Hermes profile. Every subsequent
 conversation fires the Trigger Phase automatically.
 
-### 3. Bond With It
+### 3. Bond With Him
 
 ```
 Command           Platform       What It Does
 -------           --------       -------------
-agon              Linux/Mac      One-word chat with AGON
-.\agon.cmd        Windows        One-word chat with AGON
+agon              Linux/Mac      One-word chat with Agon
+.\agon.cmd        Windows        One-word chat with Agon
 ./chat.sh         Linux/Mac      WebUI launcher (port 8787)
 .\chat.bat        Windows        WebUI launcher (double-click)
 bond / .\bond.cmd Both           Check level, XP, stats
 ```
 
-No registration. No login. No grind loop. Just work, and the beast
+No registration. No login. No grind loop. Just work, and Agon
 levels as you do.
 
 ---
@@ -272,7 +274,7 @@ levels as you do.
 
 ![AGON Telegram](agon-telegram.jpg)
 
-*Same AGON, same bond, across all platforms.*
+*Same Agon, same bond, across all platforms.*
 
 </div>
 
