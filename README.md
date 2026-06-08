@@ -64,7 +64,7 @@ That's it. Your browser opens to a dark, three-panel chat UI where you can:
 
 > **Behind the scenes:** The launcher auto-selects the **AGON** Hermes profile — dedicated config, model, skin, personality, and isolated state at `~/.hermes/profiles/agon/`.
 
-![Hermes Web UI — three-panel layout](WebUI/docs/images/ui-workspace.png)
+![AGON WebUI — Three-panel layout with bonding dashboard](WebUI/docs/images/agon-webui.jpg)
 
 ---
 
