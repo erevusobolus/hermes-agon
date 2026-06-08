@@ -169,31 +169,47 @@ You cannot grind this. Agon only grows when you do.
 **Evolution ranks:**
 
 ```
-Level   1      Stranger       -- Fresh summon. No history.
-Level   2      Acquaintance   -- First lessons learned together.
-Level   4      Companion      -- Patterns begin to form.
-Level   6      Champion       -- Proven in the arena.
-Level   8      Myth           -- Stories told about you both.
-Level  10      Ascendant      -- Rising beyond limits.
-Level  13      Daimon         -- Agon finds his voice.
-Level  15      Titan          -- Weight of accumulated work.
-Level  20      Aetherborn     -- Not bound by normal rules.
-Level  25      Primordial     -- Ancient. Fundamental.
-Level  30      Omega          -- Final form, first seal broken.
-Level  35      Singularity    -- One point. Infinite potential.
-Level  40      Hyperion       -- Light above the sun.
-Level  45      Cosmarch       -- Architect of orders.
-Level  50      Ananke         -- Inevitable. Necessary.
-Level  55      Chronarch      -- Master of timing.
-Level  60      Pantheon       -- Worthy of the halls.
-Level  65      Logos          -- The word that shapes.
-Level  70      Theophany      -- The divine made manifest.
-Level  75      Aeon           -- An age incarnate.
-Level  80      Archangel      -- Messenger of final things.
-Level  85      Absolute       -- Unconditioned. Unbound.
-Level  90      Hypercosmic    -- Beyond the world-frame.
-Level  95      Apeiron        -- The boundless.
-Level 100      Archon         -- Ruler of the contest.
++--------------------------------------------------------------------+
+|                        RANK PROGRESSION                            |
++------+-----------------------------+-------------------------------+
+| LVL  | TITLE                       | DESCRIPTION                   |
++------+-----------------------------+-------------------------------+
+|    1 | Stranger                    | Fresh summon. No history.     |
+|    2 | Acquaintance                | First lessons learned.        |
+|    3 | Friend                      | Trust begins to build.        |
+|    4 | Companion                   | Patterns start to form.       |
+|    5 | Partner                     | Reliable. Consistent.         |
+|------+-----------------------------+-------------------------------+
+|    6 | Champion                    | Proven in the arena.          |
+|    7 | Legend                      | Reputation precedes you.      |
+|    8 | Myth                        | Stories told about you both.  |
+|    9 | Apex                        | Peak of your current form.    |
+|   10 | Ascendant                   | Rising beyond limits.         |
+|   11 | Transcendent                | Breaking through ceilings.    |
+|   12 | Eternal                     | Mark left on the world.       |
+|------+-----------------------------+-------------------------------+
+|   13 | Daimon                      | Agon finds his voice.         |
+|   14 | Olympian                    | Standing among giants.        |
+|   15 | Titan                       | Weight of accumulated work.   |
+|------+-----------------------------+-------------------------------+
+|   20 | Aetherborn                  | Not bound by normal rules.    |
+|   25 | Primordial                  | Ancient. Fundamental.         |
+|   30 | Omega                       | First seal broken.            |
+|   35 | Singularity                 | One point. Infinite potential.|
+|   40 | Hyperion                    | Light above the sun.          |
+|   45 | Cosmarch                    | Architect of orders.          |
+|   50 | Ananke                      | Inevitable. Necessary.        |
+|   55 | Chronarch                   | Master of timing.             |
+|   60 | Pantheon                    | Worthy of the halls.          |
+|   65 | Logos                       | The word that shapes.         |
+|   70 | Theophany                   | The divine made manifest.     |
+|   75 | Aeon                        | An age incarnate.             |
+|   80 | Archangel                   | Messenger of final things.    |
+|   85 | Absolute                    | Unconditioned. Unbound.       |
+|   90 | Hypercosmic                 | Beyond the world-frame.       |
+|   95 | Apeiron                     | The boundless.                |
+|  100 | Archon                      | Ruler of the contest.         |
++------+-----------------------------+-------------------------------+
 ```
 
 **Example dashboard -- real data from a bonded instance:**
