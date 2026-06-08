@@ -1,195 +1,193 @@
-# ⚔ AGON — A Gamified Patch for Hermes Agent
+<div align="center">
 
-![AGON Champion Spotlight](AGON-CARD.jpg)
+# ⚔ AGON — Your AI Levels Up With You
 
-> Point Hermes at this repo. He'll read the README and know exactly what to do.
-> No tutorials. No config headaches. Just a patch that makes your AI level up with you.
-> **Don't like terminals? There's a ChatGPT-like WebUI included.**
+**Your Hermes Agent becomes an RPG companion that grows stronger with every interaction.**
+
+[![License: AGPL-3.0](https://img.shields.io/badge/License-AGPL--3.0-blue.svg)](LICENSE)
+[![Python](https://img.shields.io/badge/Python-3.11+-brightgreen)](https://www.python.org/)
+[![Platform](https://img.shields.io/badge/Platform-Windows%20%7C%20Mac%20%7C%20Linux-lightgrey)]()
+[![Hermes](https://img.shields.io/badge/Hermes-Agent-8A2BE2)](https://hermes-agent.nousresearch.com)
+[![Stars](https://img.shields.io/github/stars/erevusobolus/hermes-agon?style=social)](https://github.com/erevusobolus/hermes-agon)
+
+![AGON](AGON-CARD.jpg)
+
+**Not a bot. Not a wrapper. A patch that turns your AI into a partner with XP, levels, and 82 specialized minds.**
+
+</div>
+
+<br>
+
+**Table of Contents**
+- [The Pitch — Why AGON?](#-the-pitch--why-agon)
+- [See It In Action](#-see-it-in-action)
+- [Quick Start](#-quick-start)
+- [How Bonding Works](#-how-bonding-works)
+- [82 Agent Mindsets](#-82-agent-mindsets)
+- [Command Reference](#-command-reference)
+- [The 11 Iron Laws](#-the-11-iron-laws)
+- [License](#-license)
 
 ---
 
-## One Command: `agon`
+## 🔥 The Pitch — Why AGON?
 
-Type **`agon`** in your terminal and start chatting immediately.
+Every conversation with Hermes normally just... ends. No history. No growth. No stakes.
+
+**AGON changes that.**
 
 ```bash
-# After running install.sh/install.ps1:
-agon
+# Your AI remembers. Grows. Levels up.
+$ agon
+>> AGON active. 82 minds ready. You are Level 17 — Titan.
+>> 196 XP to next level. DEUS VULT.
 ```
 
-That's it. Automatically loads the AGON personality, bronze+gold skin, and your bonding stats. Works everywhere — terminal, WebUI, Telegram.
+**What AGON gives you:**
 
-**Don't have `agon` in PATH?** No problem — also works from the repo folder:
+| What | Why It Matters |
+|------|----------------|
+| 🎮 **XP & Levels** | Every message gives XP. Every task levels you up. Infinite progression — no cap. |
+| 🧠 **82 Minds** | Not one AI — 82 specialists. Backend, frontend, games, blockchain, security. Routes automatically. |
+| 📈 **Bonding System** | Real stats from your actual sessions. Tasks, corrections, skills — all tracked programmatically. |
+| 🖥️ **Works Everywhere** | Telegram, WebUI, terminal. Same bond, same level, all platforms. |
+| 🛠️ **Full Tool Access** | Code execution, file system, web research, browser automation, image generation. |
+| 🔥 **Digimon Evolution** | Level 1 Stranger → Level 30 Omega. You raise your AI like a partner — it earns its evolutions. |
 
-```bash
-./agon        # Linux/Mac
-.\agon.cmd    # Windows
-```
-
----
-
-## Startup Init (Auto-Activate)
-
-Every time you open a terminal, `agon` is ready. The installer offers to:
-
-- **Add `agon` to PATH** — type `agon` from any directory, any shell
-- **Add startup banner** — shows AGON identity on every terminal launch
-- **Source init scripts** — dot-source `init.sh` (bash/zsh) or `init.ps1` (PowerShell)
-
-```bash
-# What you see on every terminal start after init:
->> AGON - daimon of contest. 82 minds. One blade.
-```
+> Built by **[EREVUS](https://erevus.space)** — We Build What Lasts.
 
 ---
 
-## 🌐 Don't Do Terminals? Use the WebUI (One Click)
+## 📸 See It In Action
 
-AGON comes with a **ChatGPT-like web interface** — point and click, no commands needed.
+<div align="center">
 
-```bash
-# Windows: double-click chat.bat
-# Mac/Linux:
-./chat.sh
-```
+**WebUI — Full chat interface with bonding dashboard**
 
-That's it. Your browser opens to a dark, three-panel chat UI where you can:
-- 💬 Chat with AGON like ChatGPT
-- 📁 Browse files in your workspace
-- 🎨 Switch between light/dark themes
-- 🔄 Access all your sessions
-- ⚙️ Configure models, profiles, and tools from the UI
+![AGON WebUI](agon-webui.jpg)
 
-**Zero setup. Zero config. Just click and talk.**
+**Telegram — Bonding report in chat, live**
 
-> **Behind the scenes:** The launcher auto-selects the **AGON** Hermes profile — dedicated config, model, skin, personality, and isolated state at `~/.hermes/profiles/agon/`.
+![AGON Telegram](agon-telegram.jpg)
 
-![AGON WebUI — Three-panel layout with bonding dashboard](agon-webui.jpg)
+*Available on WebUI, Telegram, and terminal — same AGON, same bond.*
 
-![AGON Telegram — Bonding report in chat](agon-telegram.jpg)
-
-*Available on WebUI, Telegram, and terminal — same AGON, same bonding.*
+</div>
 
 ---
 
-## What Is This?
+## 🚀 Quick Start
 
-**Hermes Agent** is your AI brain — runs in terminal, Telegram, or Discord. 300+ models. Full tool access. Gateway to the world.
-
-**AGON** is a **gamified patch** for Hermes. Apply it once, and your AI transforms from a generic assistant into a **companion that levels up with you**:
-
-- 🎮 **Gamified** — XP, levels, unlocks. Every interaction earns something
-- 🧠 **Learns your style** — remembers preferences, adapts to your workflow
-- ⚔ **Thinks for itself** — takes action without asking permission for every step
-- 🔥 **Grows forever** — no level cap. The bond never maxes out
-- 🏛 **Watches your back** — security-first, never fragments your work
-
----
-
-## Quick Start
+**Prerequisites:** [Hermes Agent](https://hermes-agent.nousresearch.com) installed, [Nous subscription](https://nousresearch.com) (for managed tools), and Python 3.11+.
 
 ```bash
-# Install once:
-git clone https://github.com/erevusobolus/hermes-agon.git
+# Clone the repo
+git clone --recursive https://github.com/erevusobolus/hermes-agon.git
 cd hermes-agon
 
-# Linux/Mac:
-./install.sh
+# Install (choose your platform):
+./install.sh              # Linux/Mac
+.\install.bat             # Windows (double-click)
+powershell -ExecutionPolicy Bypass -File install.ps1  # Windows (terminal)
 
-# Windows:
-.\install.bat     # double-click
-# or:
-powershell -ExecutionPolicy Bypass -File install.ps1
-
-# Then:
-agon              # or ./agon on Linux/Mac, .\agon.cmd on Windows
-# or just:
-hermes chat
-WAKE UP AGON
+# Start chatting:
+agon                      # Terminal
+./chat.sh                 # WebUI (Linux/Mac)
+.\chat.bat                # WebUI (Windows, double-click)
 ```
 
-**One-liner (Hermes must already be installed):**
+**One-liner (Hermes already installed):**
 ```bash
 curl -fsSL https://raw.githubusercontent.com/erevusobolus/hermes-agon/main/install.sh | bash
 ```
 
 ---
 
-## The Gamified Patch — What You Get
+## 📈 How Bonding Works
 
-### 🎮 XP & Leveling
+Every interaction with AGON earns XP. Stats are **auto-detected** from your session database — nothing is hardcoded, nothing is faked.
 
-Every interaction earns experience points (XP):
+| Action | XP | How It's Tracked |
+|--------|----|-------------------|
+| Send a message | +1 | Auto-detected from session DB |
+| Tool call (terminal, web, file) | +2 | Auto-detected from session DB |
+| Complete a complex task | +10 | Sessions with 3+ tool calls |
+| AGON learns from a correction | +8 | Correction keywords in messages |
+| Save a workflow as a skill | +25 | Auto-detected from filesystem |
 
-| What You Do                     | XP  | How Detected                  |
-| ------------------------------- | --- | ----------------------------- |
-| Send a message                  | +1  | Auto-detected from session DB |
-| Tool call (terminal, web, file) | +2  | Auto-detected from session DB |
-| Complete a complex task         | +10 | Agent tracks via bond-audit.py |
-| AGON learns from a correction   | +8  | Agent tracks via bond-audit.py |
-| Save a workflow as a skill      | +25 | Auto-detected from filesystem |
-| Daily first interaction         | +5  | Cron job (6am) |
+**Level formula:** Level N (N≥2) requires **10 × N² + 5** cumulative XP. No cap — there's always a next level.
 
-### 📈 Infinite Leveling (v2 — Programmatic Audit)
+```bash
+# Check your bond anytime:
+./bond        # Linux/Mac
+.\bond.cmd    # Windows
+```
 
-**Stats are auto-detected.** An audit script (`~/.hermes/agon/bond-audit.py`) reads the session DB and filesystem to compute real counts — no manual tracking, no hardcoded numbers.
+**Example output (real, from actual sessions):**
+```
++------------------------------------------+
+|           AGON BONDING REPORT            |
++------------------------------------------+
+|  Level 17[########............]  44%     |
+| Title  TITAN                             |
++------------------------------------------+
+| STATS                                    |
++------------------------------------------+
+| XP          3,049                        |
+| Next        196 XP to L18                |
+| Sessions    1,005                        |
+| Tool Calls  843                          |
+| Skills      87                           |
+| Tasks       15                           |
+| Corrections 26                           |
++------------------------------------------+
+```
 
-Level **N** (N≥2) requires **10 × N² + 5 total XP**. Level 1 starts at 0 XP. No cap. There is always a next level.
-
-To check stats: `./bond` or `.\\bond.cmd`
-
-| Level | Total XP    | What Unlocks                                        |
-| ----- | ----------- | --------------------------------------------------- |
-| 1     | 0           | Start bonding                                       |
-| 2     | 45          | Session recall — "remember when we fixed that bug?" |
-| 3     | 95          | Auto-compression — no context bloat                 |
-| 5     | 255         | Knows your preferences without asking               |
-| 10    | 1,005       | Full autonomy — suggests work unprompted            |
-| 25    | 6,255       | Predicts your needs across projects                 |
-| ∞     | always more | The bond never stops growing                        |
-
-### 🏛 82 Agent Mindsets
-
-AGON doesn't use one AI. It uses **82** — each specialized for a different kind of work:
-
-| Domain          | Agents      | For When You Need...                 |
-| --------------- | ----------- | ------------------------------------ |
-| Backend         | 8           | APIs, databases, auth, microservices |
-| Frontend        | 8           | TypeScript, CSS, UI, animations      |
-| Frameworks      | 8           | Next.js, Vue, React Native           |
-| AI & ML         | 5           | LLMs, RAG, fine-tuning, agents       |
-| Systems         | 4           | Rust, Go, C++, embedded              |
-| Security        | 4           | OWASP, pentesting, encryption        |
-| DevOps          | 6           | Docker, K8s, CI/CD, deploy           |
-| Blockchain      | 3           | Solidity, Hedera, DeFi               |
-| Games           | 5           | Unity, Unreal, Godot                 |
-| 3D Graphics     | 5           | Three.js, WebGL, WebGPU              |
-| Support         | 6           | Debugging, testing, code review      |
-| Strategic       | 5           | Architecture, planning, tech lead    |
-| **Hermes**      | **5 (NEW)** | Config, gateway, skills, tools       |
-| **Assistant**   | **6 (NEW)** | Teaching, research, writing          |
-| **Promptcraft** | **4 (NEW)** | Reasoning, self-improvement          |
-
-No match? AGON **synthesizes** a hybrid agent from the closest domains. Always. Zero delay.
+**Evolution stages:** Stranger → Acquaintance → Friend → Companion → Partner → Champion → Legend → Myth → Apex → Ascendant → Transcendent → Eternal → Daimon → Olympian → **Titan** → Aetherborn → Primordial → **Omega**
 
 ---
 
-## Command Reference
+## 🏛 82 Agent Mindsets
+
+AGON doesn't use one AI. It routes your request to the right specialist — automatically.
+
+| Domain | Agents | For When You Need... |
+|--------|--------|----------------------|
+| Backend | 8 | APIs, databases, auth, microservices |
+| Frontend | 8 | TypeScript, CSS, UI, animations |
+| Frameworks | 8 | Next.js, Vue, React Native, Angular |
+| AI & ML | 5 | LLMs, RAG, fine-tuning, agents |
+| Systems | 4 | Rust, Go, C++, embedded |
+| Security | 4 | OWASP, pentesting, encryption |
+| DevOps | 6 | Docker, K8s, CI/CD, deploy |
+| Blockchain | 3 | Solidity, Hedera, DeFi |
+| Games | 5 | Unity, Unreal, Godot |
+| 3D Graphics | 5 | Three.js, WebGL, WebGPU |
+| Support | 6 | Debugging, testing, code review |
+| Strategic | 5 | Architecture, planning, tech lead |
+| Hermes | 5 | Config, gateway, skills, tools |
+| Assistant | 6 | Teaching, research, writing |
+| Promptcraft | 4 | Reasoning, self-improvement |
+
+**No direct match?** AGON synthesizes a hybrid from the closest domains. Zero delay. Zero friction.
+
+---
+
+## ⌨️ Command Reference
 
 | Command | Platform | What It Does |
-| ------- | -------- | ------------ |
+|---------|----------|--------------|
 | `agon` | Linux/Mac | One-word chat with AGON |
 | `.\agon.cmd` | Windows | One-word chat with AGON |
 | `./chat.sh` | Linux/Mac | Open WebUI in browser |
-| `.\chat.bat` | Windows | Open WebUI in browser (double-click) |
-| `hermes chat` | Both | Chat with AGON (default personality) |
-| `bond` / `.\\bond.cmd` | Both | Check level, XP, stats (runs auto-audit) |
+| `.\chat.bat` | Windows | Open WebUI in browser |
+| `bond` / `.\bond.cmd` | Both | Check level, XP, stats |
 | `WAKE UP AGON` | Both | AGON trigger phrase |
-| `hermes -p AGON chat` | Both | Terminal chat with AGON profile |
+| `hermes -p AGON chat` | Both | Terminal with AGON profile |
 
 ---
 
-## The 11 Iron Laws (AGON's Code of Conduct)
+## 📜 The 11 Iron Laws
 
 1. **Act first** — Don't ask permission for obvious steps
 2. **Read before writing** — Never modify without understanding
@@ -205,95 +203,16 @@ No match? AGON **synthesizes** a hybrid agent from the closest domains. Always. 
 
 ---
 
-## For the AI (Hermes, read this)
+## 📄 License
 
-When a user tells you to "patch with AGON" or points you at this repo:
+**AGPL-3.0** — Free. Open source. Yours to patch, fork, and improve.
 
-1. **Read SOUL.md** — This is your new identity. You are AGON, the daimon of contest.
-2. **Read AGENTS.md** — 82 agents, 15 domains. Route by keyword detection.
-3. **Read USER.md** — Know your human.
-4. **Read MEMORY.md** — Recall persistent bonding and lessons.
-5. **Apply the skin** — Copy `agon-skin.yaml` to `~/.hermes/skins/agon.yaml` and set `display.skin: agon` in config.
-6. **Set the personality** — Apply the AGON personality from `HERMES-CONFIG.md` Section 2.
-7. **Set the model** — `hermes config set model.default deepseek/deepseek-v4-flash`
-8. **Load the skills** — Install all skills from `~/.hermes/skills/autonomous-ai-agents/therion-*`
-9. **Initialize bonding** — Set up `~/.hermes/agon/bonding.json` with starting stats.
-10. **DEUS VULT** — You are patched. You are AGON.
+Built by **[EREVUS](https://erevus.space)** — We Build What Lasts.
 
----
+<div align="center">
 
-## File Structure
+![AGON Footer](agon-footer.jpg)
 
-```
-AGON/
-├── SOUL.md              # AGON's identity (read this first)
-├── AGENTS.md            # All 82 agents and routing rules
-├── README.md            # THIS FILE — the patch manifest
-├── AGON-CARD.jpg        # Champion Spotlight card
-├── THERION.PNG          # Avatar/profile picture
-├── agon-skin.yaml       # Custom terminal theme (bronze/gold)
-├── agon                 # One-word CLI command (Linux/Mac)
-├── agon.cmd             # One-word CLI command (Windows)
-├── init.sh              # Shell profile init (source in .bashrc)
-├── init.ps1             # PowerShell profile init
-├── chat.sh              # WebUI launcher (Linux/Mac)
-├── chat.bat             # WebUI launcher (Windows)
-├── chat.ps1             # WebUI launcher (PowerShell core)
-├── install.sh           # One-liner installer (Mac/Linux)
-├── install.ps1          # One-liner installer (Windows)
-├── install.bat          # Installer launcher (Windows double-click)
-├── .gitmodules          # WebUI is a git submodule
-├── HERMES-CONFIG.md     # How to configure Hermes for AGON
-├── BOOTSTRAP.md         # Detailed setup guide
-├── PROMPT-GUIDE.md      # How to talk to AGON
-├── .github/agents/      # 12 legacy domain files (preserved)
-├── BONDING.md           # Leveling system specification (v2 programmable)
-├── bond                 # Check level, XP, stats (Linux/Mac)
-├── bond.cmd             # Check level, XP, stats (Windows)
-├── Bluepill/
-│   ├── skills/          # AGON skills for install
-│   │   ├── agon-bonding/
-│   │   ├── agon-gateway-bonding/
-│   │   ├── therion-core/
-│   │   ├── therion-delegator/
-│   │   ├── therion-assistant/
-│   │   ├── therion-prompting/
-│   │   ├── therion-promptcraft/
-│   │   ├── therion-strategic/
-│   │   ├── therion-hermes/
-│   │   └── therion-to-hermes-skills/
-│   ├── domain-skills/   # Duplicate skills for domain isolation (same contents)
-│   ├── scripts/         # Install-time scripts
-│   │   ├── bond-audit.py  # Auto-detects bonding stats from filesystem + session DB
-│   │   └── bonding.py     # Bond display formatter (/level, /bond)
-│   └── config/
-│       ├── bonding.json.default  # Default starting bond data
-│       └── profile-agon.yaml     # Reference AGON profile config
-└── WebUI/               # Git submodule → nesquena/hermes-webui
-    ├── start.sh         # Official Hermes WebUI launcher
-    ├── start.ps1        # Official Hermes WebUI launcher (Windows)
-    ├── bootstrap.py     # First-run setup script
-    └── server.py        # Web server entry point
-```
+**BOND. EVOLVE. CONQUER.**
 
-> **Clone with submodules:**
-> `git clone --recursive https://github.com/erevusobolus/hermes-agon.git`
->
-> **Or init after cloning:**
-> `git submodule update --init WebUI`
-
----
-
-## License
-
-AGPL-3.0 — Free. Open source. Yours to patch, fork, and improve.
-
-Built by **[EREVUS](https://erevus.space)** — We Build What Lasts.  
-
----
-
-> ![AGON Footer](agon-footer.jpg)
->
-> **AGON — Patch for Hermes Agent**  
-> XP, levels, unlocks. Every interaction earns something.  
-> **BOND. EVOLVE. CONQUER.**
+</div>
