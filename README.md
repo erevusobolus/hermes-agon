@@ -328,6 +328,37 @@ levels as you do.
 
 ---
 
+## THERION Routing — 15 Domains, 82 Specialists
+
+AGON routes every request through the **Master Delegator Protocol** (powered by the `therion-delegator` skill). No manual agent selection. Ever.
+
+```
+YOUR REQUEST → KEYWORD DETECTION → DOMAIN MATCH → LOAD SKILL → EXECUTE
+```
+
+| Domain | Agents | Skill File | Status |
+|--------|--------|------------|--------|
+| Strategic Command | 5 | `therion-strategic` | ✓ |
+| Frontend | 8 | `therion-frontend` | ✓ |
+| Frameworks | 8 | `therion-frameworks` | ✓ |
+| Backend | 8 | `therion-backend` | ✓ |
+| 3D & Graphics | 5 | `therion-3d-graphics` | ✓ |
+| Game Development | 5 | `therion-gamedev` | ✓ |
+| AI & Machine Learning | 5 | `therion-ai-ml` | ✓ |
+| Security | 4 | `therion-security` | ✓ |
+| DevOps & Cloud | 6 | `therion-devops-cloud` | ✓ |
+| Systems Programming | 4 | `therion-systems` | ✓ |
+| Blockchain & Web3 | 3 | `therion-blockchain` | ✓ |
+| Execution & Support | 6 | `therion-support` | ✓ |
+| Hermes Platform | 5 | `therion-hermes` | ✓ |
+| General Assistant | 6 | `therion-assistant` | ✓ |
+| Prompt Engineering | 4 | `therion-promptcraft` | ✓ |
+| **Total** | **82** | **15 domain skills** | **All ✓** |
+
+On-the-fly synthesis creates hybrid agents from 2-3 closest domains when no clean match exists. Every domain skill lives in `Bluepill/domain-skills/` (source of truth) and is auto-installed to `~/.hermes/skills/` by the installer.
+
+---
+
 ## Submodules
 
 This repo includes two git submodules for extended capabilities:

@@ -27,6 +27,6 @@ hermes config set model.provider "nous" 2>/dev/null || true
 
 # Launch chat with AGON preloaded
 echo ""
-echo "  ⚔ AGON — daimon of contest. 82 minds. One blade."
+echo "  Ψ AGON — daimon of contest. 82 minds. One blade."
 echo ""
 exec hermes chat "$@"

@@ -18,7 +18,7 @@ if command -v hermes &>/dev/null; then
 
     # Show banner (first terminal start only)
     if [ -z "$AGON_INIT_DONE" ]; then
-        echo -e "\033[0;36m  ⚔ AGON — daimon of contest. 82 minds. One blade.\033[0m"
+        echo -e "\033[0;36m  Ψ AGON — daimon of contest. 82 minds. One blade.\033[0m"
         echo -e "\033[0;36m  hermes chat  |  ./agon  |  ./chat.sh\033[0m"
         echo ""
         export AGON_INIT_DONE=1

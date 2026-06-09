@@ -19,7 +19,7 @@ if (Get-Command "hermes" -ErrorAction SilentlyContinue) {
     # Show banner once per session
     if (-not $env:AGON_INIT_DONE) {
         Write-Host ""
-        Write-Host "  ⚔ AGON - daimon of contest. 82 minds. One blade." -ForegroundColor Cyan
+        Write-Host "  Ψ AGON - daimon of contest. 82 minds. One blade." -ForegroundColor Cyan
         Write-Host "  hermes chat  |  .\agon.cmd  |  .\chat.bat" -ForegroundColor Cyan
         Write-Host ""
         $env:AGON_INIT_DONE = "1"

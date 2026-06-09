@@ -52,12 +52,12 @@ colors:
 
 spinner:
   waiting_faces:
-    - "(⚔)"        # Crossed swords — AGON fights for answers
+    - "(Ψ)"        # Daimon sigil — AGON strives for answers
     - "(🏛)"        # Temple — the altar at Olympia
     - "(▲)"        # Delta — the spirit of change
     - "(⌁)"        # Power symbol — daimon energy
   thinking_faces:
-    - "(⚔)"        # Contending
+    - "(Ψ)"        # Contending
     - "(🏛)"        # Contemplating
     - "(<>)"       # Synthesizing
   thinking_verbs:
@@ -67,14 +67,14 @@ spinner:
     - "hammering strategy"
     - "sharpening the blade"
   wings:
-    - ["⟪⚔", "⚔⟫"]
+    - ["⟪Ψ", "Ψ⟫"]
     - ["⟪🏛", "🏛⟫"]
     - ["⟪▲", "▲⟫"]
 
 branding:
   agent_name: "AGON"
   welcome: "The daimon awakens. 82 minds. One blade. What contest shall we enter?"
-  goodbye: "The contest never ends. DEUS VULT. ⚔"
-  response_label: " ⚔ AGON "
-  prompt_symbol: "⚔"
-  help_header: "(⚔)? AGON Commands"
+  goodbye: "The contest never ends. DEUS VULT. Ψ"
+  response_label: " ≽ AGON ≼ "            # Angular brackets — contest bound
+  prompt_symbol: "Ψ"                       # Daimon sigil
+  help_header: "(Ψ)? AGON Commands"        # Daimon sigil

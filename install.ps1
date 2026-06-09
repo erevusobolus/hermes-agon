@@ -24,7 +24,12 @@ if (-not $AGON_ROOT) {
     pause; exit 1
 }
 
-$HERMES_HOME = "$env:USERPROFILE\.hermes"
+$actualHome = & hermes config path 2>$null
+if ($actualHome) {
+    $HERMES_HOME = Split-Path $actualHome -Parent
+} else {
+    $HERMES_HOME = "$env:USERPROFILE\AppData\Local\hermes"
+}
 
 Write-Host ""
 Write-Host "==========================================================" -ForegroundColor Cyan
