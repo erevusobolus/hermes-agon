@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """AGON Bond Responder — Telegram-native, no frames, clean ASCII.
-Reads bonding.json, prints formatted dashboard to stdout.
+RUNS THE AUDIT FIRST before displaying — stats are always live.
+Reads bonding.json after audit, prints formatted dashboard to stdout.
 Called by gateway handler on /level and /bond commands.
-NO box frames — just clean formatted output for Telegram code blocks.
 """
 
 import json, os, sys
@@ -46,9 +46,7 @@ def _comma(n):
     return "{:,}".format(n)
 
 
-# ── Clean bar (no frame) ──────────────────────────────────────────────
 def _bar(pct, width=16):
-    """Clean horizontal bar: `[####....]` style, no side frames."""
     filled = 0
     if pct > 0:
         filled = max(1, int(pct * width / 100))
@@ -57,12 +55,24 @@ def _bar(pct, width=16):
     return "[" + "#" * filled + "." * (width - filled) + "]"
 
 
-# ── Separators (pure ASCII for Telegram compatibility) ────────────────
 SEP = "-" * 36
 HDR = "=" * 36
 
 
 def main():
+    # ── STEP 1: Run audit to get live stats ──────────────────────────
+    audit_script = Path(__file__).parent / "bond-audit.py"
+    if audit_script.exists():
+        import subprocess
+        try:
+            subprocess.run(
+                [sys.executable, str(audit_script)],
+                capture_output=True, text=True, timeout=15
+            )
+        except Exception:
+            pass  # audit is best-effort; continue with whatever we have
+
+    # ── STEP 2: Read the freshly audited bonding.json ────────────────
     f = _find_bonding_file()
     if not f.exists():
         print("AGON bonding not initialized.")

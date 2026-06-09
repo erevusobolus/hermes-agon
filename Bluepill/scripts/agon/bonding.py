@@ -179,6 +179,19 @@ def format_bond(data):
 
 if __name__ == "__main__":
     import sys
+
+    # Run audit first for live stats
+    audit_script = Path(__file__).parent / "bond-audit.py"
+    if audit_script.exists():
+        import subprocess
+        try:
+            subprocess.run(
+                [sys.executable, str(audit_script)],
+                capture_output=True, text=True, timeout=15
+            )
+        except Exception:
+            pass
+
     data = load_bonding()
     if len(sys.argv) > 1 and sys.argv[1] == "bond":
         print(format_bond(data))
