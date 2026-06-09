@@ -364,6 +364,22 @@ def install_skill():
     return True
 
 
+def _install_bond_responder():
+    """Copy bond-responder.py from Bluepill/scripts/ to ~/.hermes/agon/."""
+    repo_script = Path(__file__).resolve().parent / "Bluepill" / "scripts" / "bond-responder.py"
+    dest = AGON_DIR / "bond-responder.py"
+    if not repo_script.exists():
+        print("  [!] bond-responder.py not found in repo (non-fatal)")
+        return True
+    if dest.exists() and "AGON Bond Responder" in dest.read_text(encoding="utf-8"):
+        print("  [ok] bond-responder.py already up to date (skipped)")
+        return True
+    import shutil
+    shutil.copy2(str(repo_script), str(dest))
+    print("  [ok] bond-responder.py installed — programmatic /level and /bond")
+    return True
+
+
 def main():
     print("")
     print("  -- Patch: AGON Gateway Commands --------------------")
@@ -380,6 +396,7 @@ def main():
     ok &= create_bonding_py()
     ok &= ensure_bonding_json()
     ok &= install_skill()
+    ok &= _install_bond_responder()
 
     if ok:
         print("")
