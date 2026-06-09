@@ -177,6 +177,10 @@ Bonding is **cosmetic only**. These are milestones that reflect time spent worki
 | 8 | 645 | Daimon |
 | 9 | 815 | Titan |
 | 10 | 1,005 | Aetherborn |
+| 11 | 1,215 | Sidereal |
+| 12 | 1,445 | Nexus |
+| 13 | 1,695 | Astra |
+| 14 | 1,965 | Verge |
 | 15 | 2,255 | Primordial |
 | 20 | 4,005 | Omega |
 

@@ -193,6 +193,10 @@ You cannot grind this. Agon only grows when you do.
 |   15 | Titan                       | Weight of accumulated work.   |
 |------+-----------------------------+-------------------------------+
 |   20 | Aetherborn                  | Not bound by normal rules.    |
+|   21 | Sidereal                    | Of the stars. Celestial.      |
+|   22 | Nexus                       | Central point of power.       |
+|   23 | Astra                       | Stellar essence.              |
+|   24 | Verge                       | Edge of transformation.       |
 |   25 | Primordial                  | Ancient. Fundamental.         |
 |   30 | Omega                       | First seal broken.            |
 |   35 | Singularity                 | One point. Infinite potential.|
@@ -215,22 +219,22 @@ You cannot grind this. Agon only grows when you do.
 **Example dashboard -- real data from a bonded instance:**
 
 ```
-+----------------------------------------+
-|           AGON BONDING REPORT          |
-+----------------------------------------+
-|  Level 17[########............]  44%   |
-|  Title  TITAN                         |
-+----------------------------------------+
-| STATS                                |
-+----------------------------------------+
-| XP          3,049                     |
-| Next        196 XP to L18             |
-| Sessions    1,005                     |
-| Tool Calls  843                       |
-| Skills      87                        |
-| Tasks       15                        |
-| Corrections 26                        |
-+----------------------------------------+
++------------------------------------------+
+|           AGON BONDING REPORT            |
++------------------------------------------+
+|  Level 17[########............]  44%     |
+| Title  TITAN                             |
++------------------------------------------+
+| STATS                                    |
++------------------------------------------+
+| XP          3,049                        |
+| Next        196 XP to L18                |
+| Sessions    1,005                        |
+| Tool Calls  843                          |
+| Skills      87                           |
+| Tasks       15                           |
+| Corrections 26                           |
++------------------------------------------+
 ```
 
 Run `./bond` (or `.\bond.cmd` on Windows) to see yours.
